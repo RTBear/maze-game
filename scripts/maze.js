@@ -9,7 +9,6 @@ function maze(width = 81, height = 51) {
 
     // build actual maze
     var Z = blankBoard(shapeX = shapeX, shapeY = shapeY, borderVal = WALL, fillVal = WALL)
-    var consideredSpaces = blankBoard(shapeX = shapeX, shapeY = shapeY, borderVal = 0, fillVal = 0)
     console.log(Z)
     print2dArr(Z)
 
@@ -17,15 +16,13 @@ function maze(width = 81, height = 51) {
     let y = getRandomInt(shapeY - 1)
 
     let neighbors = getNeighbors(x, y);
-    // if(consideredSpaces[y][x]){
     Z[y][x] = PASSAGE;//make the cell a passage
-    consideredSpaces[y][x] = 1;
     connectWithNeighbors(neighbors, x, y);
 
     function connectWithNeighbors(neighbors, x, y) {
         //try to connect with random neighbor if they are a passage
         while (neighbors.length > 0) {
-            console.log(neighbors)
+            // console.log(neighbors)
             let neigborNum = getRandomInt(neighbors.length - 1);
             let y2 = neighbors[neigborNum][0];//random neighbor
             let x2 = neighbors[neigborNum][1];
@@ -34,7 +31,6 @@ function maze(width = 81, height = 51) {
                 let connY = y2 + Math.trunc((y - y2) / 2);
                 let connX = x2 + Math.trunc((x - x2) / 2);
                 Z[connY][connX] = PASSAGE;
-                consideredSpaces[connY][connX] = 1;
                 connectWithNeighbors(getNeighbors(x2, y2), x2, y2);
             }
             neighbors.splice(neigborNum, 1);
@@ -55,14 +51,11 @@ function maze(width = 81, height = 51) {
             x2 = n[1];
             let connY = y2 + Math.trunc((y - y2) / 2);
             let connX = x2 + Math.trunc((x - x2) / 2);
-            consideredSpaces[y2][x2] = 1;
-            consideredSpaces[connY][connX] = 1;
         }
         return neighbors;
     }
 
     print2dArr(Z)
-    print2dArr(consideredSpaces)
 }
 
 //credit for getRandomInt function goes to [alienriver49 and Ionut G. Stan] 
@@ -77,7 +70,6 @@ function getRandomInt(max, min = 0) {
 function print2dArr(arr = []) {
     s = ''
     for (let i = 0; i < arr.length; i++) {
-        // console.log(arr[i]);
         let row = '';
         for (let j = 0; j < arr[0].length; j++) {
             row += arr[i][j];
