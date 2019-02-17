@@ -1,0 +1,25 @@
+body {
+    padding: 15px;
+}
+
+#high-scores {
+    height: 100px;
+    overflow-y: scroll;
+    margin-left: -15px;
+}
+
+#game-canvas {
+    width: 500px;
+    height: 500px;
+    border-style: solid;
+    border-width: 10px;
+    display: block;
+    margin: 0 auto;
+    background-color: darkgray;
+}
+
+#gameover {
+    position: relative;
+    margin: 48px auto -400px auto;
+    font-size: 120px;
+}

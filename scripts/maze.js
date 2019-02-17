@@ -6,18 +6,23 @@ function maze(width = 81, height = 51) {
     let shapeY = Math.trunc(height / 2) * 2 + 1;
     console.log('w', width, 'sx', shapeX)
     console.log('h', height, 'sy', shapeY)
-
+    
     // build actual maze
     var Z = blankBoard(shapeX = shapeX, shapeY = shapeY, borderVal = WALL, fillVal = WALL)
     console.log(Z)
     print2dArr(Z)
-
+    
     let x = getRandomInt(shapeX - 1)
     let y = getRandomInt(shapeY - 1)
 
+    // let x = 0;
+    // let y = 0;
+    
     let neighbors = getNeighbors(x, y);
     Z[y][x] = PASSAGE;//make the cell a passage
     connectWithNeighbors(neighbors, x, y);
+    
+    print2dArr(Z)
 
     function connectWithNeighbors(neighbors, x, y) {
         //try to connect with random neighbor if they are a passage
@@ -55,7 +60,6 @@ function maze(width = 81, height = 51) {
         return neighbors;
     }
 
-    print2dArr(Z)
 }
 
 //credit for getRandomInt function goes to [alienriver49 and Ionut G. Stan] 
