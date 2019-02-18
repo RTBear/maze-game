@@ -35,7 +35,8 @@ MazeGame.graphics = (function () {
             spec.fillStyle = 'rgba(255, 255, 255, 0)';
         }
         if (cell.isPassage === false) {
-            spec.strokeStyle = 'rgb(100, 100, 100)';
+            spec.strokeStyle = 'rgb(100, 100, 100)';//gray
+            // spec.strokeStyle = 'rgb(16, 89, 206)';//blue
             spec.fillStyle = spec.strokeStyle;
         }
         drawRectangle(spec);

@@ -6,13 +6,8 @@ MazeGame.main = (function (graphics) {
     var g_elapsedTime = 0;
 
     //board constants
-    const GAME_WIDTH = 20;
-    const GAME_HEIGHT = 20;
     const CANVAS_WIDTH = 500;
     const CANVAS_HEIGHT = 500;
-    const CELL_WIDTH = CANVAS_WIDTH / GAME_WIDTH;//for use if using non-square gameboard
-    const CELL_HEIGHT = CANVAS_HEIGHT / GAME_HEIGHT;//for use if using non-square gameboard
-    const CELL_SIZE = CELL_WIDTH;//only square game boards allowed for now :)
 
     //gameplay constants
     const NUM_SNAKES = 1;
@@ -25,17 +20,23 @@ MazeGame.main = (function (graphics) {
     const MS_PER_MOVE = 150;
 
     //gameplay globals
+    var GAME_WIDTH = 5;//5x5, 10x10, 15x15, 20x20
+    var GAME_HEIGHT = 5;
+    var CELL_WIDTH = CANVAS_WIDTH / GAME_WIDTH;//for use if using non-square gameboard
+    var CELL_HEIGHT = CANVAS_HEIGHT / GAME_HEIGHT;//for use if using non-square gameboard
+    var CELL_SIZE = CELL_WIDTH;//only square game boards allowed for now :)
+
     var SNAKES = [];//array of snake objects
     var GAME_GRID = null;//data structure for game board
     var GAME_OVER = false;
     var HIGH_SCORES = [];
-    
+
     //directions
     const UP = 'up';
     const RIGHT = 'right';
     const DOWN = 'down';
     const LEFT = 'left';
-    
+
     function updateHighScores() {
         for (let snake of SNAKES) {
             HIGH_SCORES.push(snake.score);
@@ -73,10 +74,31 @@ MazeGame.main = (function (graphics) {
         GAME_OVER = false;
     }
 
+    function getMazeSize() {
+        let size = document.querySelector('#maze-size input[name=mazeSize]:checked');
+        let sizes_arr = size.value.split('x');
+
+        return {
+            width: sizes_arr[0],
+            height: sizes_arr[1]
+        }
+    }
+
     function init() {
         clear_game();
         SNAKES = [];
+        const MAZE_SIZE_TO_GAME_SIZE_MULTIPLIER = 1;//because each cell in a 5x5 maze will consist of 9 actual game cells 
+        //set maze size
+        let mazeSize = getMazeSize();
+        GAME_WIDTH = mazeSize.width * MAZE_SIZE_TO_GAME_SIZE_MULTIPLIER;
+        GAME_HEIGHT = mazeSize.height * MAZE_SIZE_TO_GAME_SIZE_MULTIPLIER;
+        CELL_WIDTH = CANVAS_WIDTH / GAME_WIDTH;//for use if using non-square gameboard
+        CELL_HEIGHT = CANVAS_HEIGHT / GAME_HEIGHT;//for use if using non-square gameboard
+        CELL_SIZE = CELL_WIDTH;//only square game boards allowed for now :)
+
+
         GAME_GRID = makeMaze(GAME_WIDTH, GAME_HEIGHT);
+        console.log(GAME_GRID)
 
         requestAnimationFrame(gameLoop);
     }
@@ -91,6 +113,7 @@ MazeGame.main = (function (graphics) {
     function render() {
         graphics.clear();
         graphics.context.save();
+        console.log('here', GAME_WIDTH)
         graphics.drawBoard(GAME_GRID, { w: GAME_WIDTH, h: GAME_HEIGHT }, CELL_SIZE);
         graphics.context.restore();
     }
