@@ -96,10 +96,10 @@ MazeGame.main = (function (graphics) {
         CELL_HEIGHT = CANVAS_HEIGHT / GAME_HEIGHT;//for use if using non-square gameboard
         CELL_SIZE = CELL_WIDTH;//only square game boards allowed for now :)
 
-        let unparsedMaze = makeMaze(GAME_WIDTH * MAZE_SIZE_TO_GAME_SIZE_MULTIPLIER, GAME_HEIGHT * MAZE_SIZE_TO_GAME_SIZE_MULTIPLIER);
-        printMazeString(unparsedMaze);
-        GAME_GRID = parseMazeEdges(unparsedMaze);
-        unparsedMaze = null;
+        GAME_GRID = makeMaze(GAME_WIDTH * MAZE_SIZE_TO_GAME_SIZE_MULTIPLIER, GAME_HEIGHT * MAZE_SIZE_TO_GAME_SIZE_MULTIPLIER);
+        // printMazeString(unparsedMaze);
+        // GAME_GRID = parseMazeEdges(unparsedMaze);
+        // unparsedMaze = null;
         console.log(GAME_GRID)
 
         requestAnimationFrame(gameLoop);

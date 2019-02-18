@@ -1,10 +1,4 @@
 function makeMaze(width = 15, height = 15) {
-    let WALL = false;//syntactic sugar
-    let PASSAGE = true;
-    // only odd shapes
-    // let shapeX = Math.trunc(width / 2) * 2 + 1;
-    // let shapeY = Math.trunc(height / 2) * 2 + 1;
-
     let shapeX = width;
     let shapeY = height;
 
@@ -13,14 +7,11 @@ function makeMaze(width = 15, height = 15) {
 
     // build actual maze
     var maze = blankBoard(shapeX = shapeX, shapeY = shapeY);
-    // console.log(maze);
-    // printMazeString(maze);
 
-    //generate maze with random "seed" cell
+    //generate maze with random "seed" cell //this will likely break after maze parsing update
     // let x = getRandomInt(shapeX - 1);
     // let y = getRandomInt(shapeY - 1);
 
-    //generate maze starting at (0,0)TODO: this currently uses more of the gameboard (edges), perhaps make my implementation of Primm's more random and this will not be needed
     let x = 1;
     let y = 1;
 
@@ -28,8 +19,7 @@ function makeMaze(width = 15, height = 15) {
     let neighbors = getNeighbors(x, y);
     connectWithNeighbors(neighbors, x, y);//start connecting interior
 
-    return maze
-    // printMazeString(maze)
+    return parseMazeEdges(maze);
 
     function connectWithNeighbors(neighbors, x, y) {
         //try to connect with random neighbor if they are a passage
@@ -57,9 +47,6 @@ function makeMaze(width = 15, height = 15) {
                     maze[y2][x2 + 1].isPassage = true;
                     maze[y2][x2 + 2].isPassage = true;
                 }
-                // let connY = y2 + Math.trunc((y - y2) / 2);
-                // let connX = x2 + Math.trunc((x - x2) / 2);
-                // maze[connY][connX].isPassage = true;
                 connectWithNeighbors(getNeighbors(x2, y2), x2, y2);
             }
             neighbors.splice(neigborNum, 1);
@@ -74,14 +61,32 @@ function makeMaze(width = 15, height = 15) {
         if (y > 2) { neighbors.push([y - 3, x]); }
         if (y < shapeY - 3) { neighbors.push([y + 3, x]); }
 
-        // for (n of neighbors) {
-        //     // n[0] is y
-        //     y2 = n[0];
-        //     x2 = n[1];
-        //     let connY = y2 + Math.trunc((y - y2) / 2);
-        //     let connX = x2 + Math.trunc((x - x2) / 2);
-        // }
         return neighbors;
+    }
+
+    function parseMazeEdges(maze) {//maze is 2d array representation of a maze
+        let shapeY = maze.length;
+        let shapeX = maze[0].length;
+    
+        let parsedMaze = [];
+        for (let i = 1; i < shapeY; i += 3) {//for each row
+            var row = [];
+            for (let j = 1; j < shapeX; j += 3) {
+                row.push(new Cell({
+                    isPassage: true,
+                    edge: {
+                        up: ! maze[i - 1][j].isPassage,//use not because edge.up == true sounds like up is blocked
+                        right: ! maze[i][j + 1].isPassage,
+                        down: ! maze[i + 1][j].isPassage,
+                        left: ! maze[i][j - 1].isPassage
+                    },
+                    x: Math.trunc(j/3),//remember, 3 is "width" of an unparsed cell
+                    y: Math.trunc(i/3)
+                }));
+            }
+            parsedMaze.push(row);
+        }
+        return parsedMaze
     }
 
 }
@@ -91,6 +96,8 @@ function Cell(spec) {
     let isOccupied = false; //default
     let containsBreadcrumb = false; //default
     let partOfShortestPath = false; //default
+    let x = 0; //default
+    let y = 0; //default
 
     isPassage = spec.isPassage;
     isOccupied = spec.isOccupied;
@@ -151,42 +158,3 @@ function blankBoard(shapeX = 5, shapeY = 5) {//create 2d array of Cell objects t
     }
     return a;
 }
-
-function parseMazeEdges(maze) {//maze is 2d array representation of a maze
-    let shapeY = maze.length;
-    let shapeX = maze[0].length;
-
-    let parsedMaze = [];
-    for (let i = 1; i < shapeY; i += 3) {//for each row
-        var row = [];
-        for (let j = 1; j < shapeX; j += 3) {
-            row.push(new Cell({
-                isPassage: true,
-                edge: {
-                    up: ! maze[i - 1][j].isPassage,//use not because edge.up == true sounds like up is blocked
-                    right: ! maze[i][j + 1].isPassage,
-                    down: ! maze[i + 1][j].isPassage,
-                    left: ! maze[i][j - 1].isPassage
-                },
-                x: Math.trunc(j/3),//remember, 3 is "width" of an unparsed cell
-                y: Math.trunc(i/3)
-            }));
-        }
-        parsedMaze.push(row);
-    }
-    return parsedMaze
-}
-
-// let maze = makeMaze(25, 15);
-// console.log(maze);
-// printMazeString(maze);
-mazeX = 5;
-mazeX = 5;
-
-let maze2 = makeMaze(mazeX * 3, mazeX * 3);
-console.log(maze2);
-printMazeString(maze2);
-let pmaze = parseMazeEdges(maze2);
-console.log('pmaze')
-console.log(pmaze)
-printMazeString(pmaze);
