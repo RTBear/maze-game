@@ -9,50 +9,57 @@ MazeGame.graphics = (function () {
     }
 
     function drawBoard(board, dims, cell_size) {
+        // context.strokeStyle = 'rgb(255, 255, 255)';//white
+        context.strokeStyle = 'rgb(0, 0, 0)';//black
+        context.lineWidth = 2;
+
         for (let i = 0; i < dims.w; i++) {
             for (let j = 0; j < dims.h; j++) {
-                drawCell(board[i][j], i, j, cell_size);
+                drawCell(board[i][j], cell_size);
             }
         }
+        context.stroke();//draw maze lines
+
+        context.beginPath();
+        context.moveTo(0, 0);
+        context.lineTo(dims.w*cell_size, 0);
+        context.lineTo(dims.w*cell_size, dims.h*cell_size);
+        context.lineTo(0, dims.h*cell_size);
+        context.closePath();
+        context.lineWidth = 5;
+
+        // context.strokeStyle = 'rgb(0, 0, 0)';
+        context.stroke();
     }
 
-    function drawCell(cell, x, y, cell_size) {
-        let spec = {
-            // strokeStyle: snake.strokeColor,
-            // fillStyle: snake.fillColor,
-            lineWidth: 3,
-            x: x * cell_size,
-            y: y * cell_size,
-            w: cell_size,
-            h: cell_size
+    function drawCell(cell, cell_size) {
+        if (cell.edge) {
+            let modifier = 1;
+            if (cell.edge.up === true) {
+                context.moveTo(cell.x * cell_size, cell.y * cell_size);
+                context.lineTo((cell.x + 1) * cell_size, cell.y * cell_size);
+                //context.stroke();
+            }
+
+            if (cell.edge.right === true) {
+                context.moveTo((cell.x + 1) * cell_size, cell.y * cell_size);
+                context.lineTo((cell.x + 1) * cell_size, (cell.y + 1) * cell_size);
+                //context.stroke();
+            }
+
+            if (cell.edge.down === true) {
+                context.moveTo(cell.x * cell_size, (cell.y + 1) * cell_size);
+                context.lineTo((cell.x + 1) * cell_size, (cell.y + 1) * cell_size);
+                //context.stroke();
+            }
+
+            if (cell.edge.left === true) {
+                context.moveTo(cell.x * cell_size, cell.y * cell_size);
+                context.lineTo(cell.x * cell_size, (cell.y + 1) * cell_size);
+                //context.stroke();
+            }
+            // context.stroke();
         }
-        // if (cell.isPassage === true) {
-        //     spec.strokeStyle = 'rgb(150, 150, 150)';
-        //     spec.fillStyle = 'rgb(169, 169, 169)';
-        // }
-        if (cell.isPassage === true) {
-            spec.strokeStyle = 'rgb(150, 150, 150, 0)';
-            spec.fillStyle = 'rgba(255, 255, 255, 0)';
-        }
-        if (cell.isPassage === false) {
-            spec.strokeStyle = 'rgb(100, 100, 100)';//gray
-            // spec.strokeStyle = 'rgb(16, 89, 206)';//blue
-            spec.fillStyle = spec.strokeStyle;
-        }
-        drawRectangle(spec);
-        // if(cell.content === 'empty'){
-        //     spec.strokeStyle = 'rgb(150, 150, 150)';
-        //     spec.fillStyle = 'rgb(169, 169, 169)';
-        // }else if(cell.content === 'wall'){
-        //     spec.strokeStyle = 'rgb(50, 50, 50)';
-        //     spec.fillStyle = 'rgb(100, 100, 100)';
-        // }else if(cell.content === 'snake'){
-        //     spec.strokeStyle = 'rgb(1, 196, 24)';
-        //     spec.fillStyle = 'rgb(0, 229, 26)';
-        // }else if(cell.content === 'apple'){
-        //     spec.strokeStyle = 'rgb(150, 0, 0)';
-        //     spec.fillStyle = 'rgb(255, 0, 0)';
-        // }
     }
 
     function drawRectangle(spec) {

@@ -90,14 +90,16 @@ MazeGame.main = (function (graphics) {
         const MAZE_SIZE_TO_GAME_SIZE_MULTIPLIER = 3;//because each cell in a 5x5 maze will consist of 9 actual game cells 
         //set maze size
         let mazeSize = getMazeSize();
-        GAME_WIDTH = mazeSize.width * MAZE_SIZE_TO_GAME_SIZE_MULTIPLIER;
-        GAME_HEIGHT = mazeSize.height * MAZE_SIZE_TO_GAME_SIZE_MULTIPLIER;
+        GAME_WIDTH = mazeSize.width;
+        GAME_HEIGHT = mazeSize.height;
         CELL_WIDTH = CANVAS_WIDTH / GAME_WIDTH;//for use if using non-square gameboard
         CELL_HEIGHT = CANVAS_HEIGHT / GAME_HEIGHT;//for use if using non-square gameboard
         CELL_SIZE = CELL_WIDTH;//only square game boards allowed for now :)
 
-
-        GAME_GRID = makeMaze(GAME_WIDTH, GAME_HEIGHT);
+        let unparsedMaze = makeMaze(GAME_WIDTH * MAZE_SIZE_TO_GAME_SIZE_MULTIPLIER, GAME_HEIGHT * MAZE_SIZE_TO_GAME_SIZE_MULTIPLIER);
+        printMazeString(unparsedMaze);
+        GAME_GRID = parseMazeEdges(unparsedMaze);
+        unparsedMaze = null;
         console.log(GAME_GRID)
 
         requestAnimationFrame(gameLoop);

@@ -152,7 +152,7 @@ function blankBoard(shapeX = 5, shapeY = 5) {//create 2d array of Cell objects t
     return a;
 }
 
-function parseMazeBorders(maze) {//maze is 2d array representation of a maze
+function parseMazeEdges(maze) {//maze is 2d array representation of a maze
     let shapeY = maze.length;
     let shapeX = maze[0].length;
 
@@ -186,7 +186,7 @@ mazeX = 5;
 let maze2 = makeMaze(mazeX * 3, mazeX * 3);
 console.log(maze2);
 printMazeString(maze2);
-let pmaze = parseMazeBorders(maze2);
+let pmaze = parseMazeEdges(maze2);
 console.log('pmaze')
 console.log(pmaze)
 printMazeString(pmaze);
