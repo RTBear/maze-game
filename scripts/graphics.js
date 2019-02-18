@@ -26,13 +26,19 @@ MazeGame.graphics = (function () {
             w: cell_size,
             h: cell_size
         }
+        // if (cell.isPassage === true) {
+        //     spec.strokeStyle = 'rgb(150, 150, 150)';
+        //     spec.fillStyle = 'rgb(169, 169, 169)';
+        // }
         if (cell.isPassage === true) {
-            spec.strokeStyle = 'rgb(150, 150, 150)';
-            spec.fillStyle = 'rgb(169, 169, 169)';
-        } else if (cell.isPassage === false) {
-            spec.strokeStyle = 'rgb(50, 50, 50)';
-            spec.fillStyle = 'rgb(100, 100, 100)';
+            spec.strokeStyle = 'rgb(150, 150, 150, 0)';
+            spec.fillStyle = 'rgba(255, 255, 255, 0)';
         }
+        if (cell.isPassage === false) {
+            spec.strokeStyle = 'rgb(100, 100, 100)';
+            spec.fillStyle = spec.strokeStyle;
+        }
+        drawRectangle(spec);
         // if(cell.content === 'empty'){
         //     spec.strokeStyle = 'rgb(150, 150, 150)';
         //     spec.fillStyle = 'rgb(169, 169, 169)';
@@ -46,7 +52,6 @@ MazeGame.graphics = (function () {
         //     spec.strokeStyle = 'rgb(150, 0, 0)';
         //     spec.fillStyle = 'rgb(255, 0, 0)';
         // }
-        drawRectangle(spec);
     }
 
     function drawRectangle(spec) {
@@ -67,7 +72,7 @@ MazeGame.graphics = (function () {
         context.save();
 
         context.strokeStyle = spec.strokeStyle != 'undefined' ? spec.strokeStyle : 'rgba(0, 0, 111, 1)';
-        context.fillStyle = spec.fillStyle != 'undefined' ? spec.fillStyle : 'rgba(0, 0, 255, 1)';
+        context.fillStyle = spec.fillStyle != 'undefined' ? spec.fillStyle : '';
         context.lineWidth = spec.lineWidth != 'undefined' ? spec.lineWidth : 5;
 
         var x = spec.x != 'undefined' ? spec.x : canvas.width / 4 + 0.5;
