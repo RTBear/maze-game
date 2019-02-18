@@ -8,16 +8,22 @@ MazeGame.graphics = (function () {
         context.clearRect(0, 0, canvas.width, canvas.height);
     }
 
+    function drawPlayer(player, cell_size){
+        //TODO:draw player on board/canvas
+        //player should know own direction and coordinates
+    }
+
     function drawBoard(board, dims, cell_size) {
         // context.strokeStyle = 'rgb(255, 255, 255)';//white
         context.strokeStyle = 'rgb(0, 0, 0)';//black
         context.lineWidth = 2;
 
-        for (let i = 0; i < dims.w; i++) {
-            for (let j = 0; j < dims.h; j++) {
+        for (let i = 0; i < dims.h; i++) {
+            for (let j = 0; j < dims.w; j++) {
                 drawCell(board[i][j], cell_size);
             }
         }
+
         context.stroke();//draw maze lines
 
         context.beginPath();
@@ -33,37 +39,68 @@ MazeGame.graphics = (function () {
     }
 
     function drawCell(cell, cell_size) {
+        if(cell.isStart){
+            drawRectangle({
+                x: cell.x * cell_size,
+                y: cell.y * cell_size,
+                w: cell_size,
+                h: cell_size,
+                fillStyle: 'rgba(0,200,0,0.5)',
+                strokeStyle: 'rgba(0,200,0,0.5)',
+                lineWidth: 0
+            });
+        }
+        if(cell.isFinish){
+            drawRectangle({
+                x: cell.x * cell_size,
+                y: cell.y * cell_size,
+                w: cell_size,
+                h: cell_size,
+                fillStyle: 'rgba(200,0,0,0.5)',
+                strokeStyle: 'rgba(200,0,0,0.5)',
+                lineWidth: 0
+            });
+        }
+
         if (cell.edge) {
             let modifier = 1;
             if (cell.edge.up === true) {
                 context.moveTo(cell.x * cell_size, cell.y * cell_size);
                 context.lineTo((cell.x + 1) * cell_size, cell.y * cell_size);
-                //context.stroke();
             }
 
             if (cell.edge.right === true) {
                 context.moveTo((cell.x + 1) * cell_size, cell.y * cell_size);
                 context.lineTo((cell.x + 1) * cell_size, (cell.y + 1) * cell_size);
-                //context.stroke();
             }
 
             if (cell.edge.down === true) {
                 context.moveTo(cell.x * cell_size, (cell.y + 1) * cell_size);
                 context.lineTo((cell.x + 1) * cell_size, (cell.y + 1) * cell_size);
-                //context.stroke();
             }
 
             if (cell.edge.left === true) {
                 context.moveTo(cell.x * cell_size, cell.y * cell_size);
                 context.lineTo(cell.x * cell_size, (cell.y + 1) * cell_size);
-                //context.stroke();
             }
-            // context.stroke();
         }
+
+        if(cell.isOccupied){//TODO: move to something like drawPlayer() which will handle direction and such. Player should know own location.
+            drawRectangle({
+                x: cell.x * cell_size/2 + cell_size/4,
+                y: cell.y * cell_size/2 + cell_size/4,
+                w: cell_size/2,
+                h: cell_size/2,
+                fillStyle: 'rgba(0,0,200,1)',
+                strokeStyle: 'rgba(0,0,200,1)',
+                lineWidth: 0
+            });
+        }
+        
     }
 
     function drawRectangle(spec) {
-        // specExample {
+        // specExample { //no fields are required
         //     strokeStyle = 'rgba(0, 0, 255, 1)',
         //     fillStyle = 'rgba(0, 0, 255, 1)',
         //     lineWidth = 5,
@@ -135,7 +172,8 @@ MazeGame.graphics = (function () {
         clear: clear,
         Texture: Texture,
         drawRectangle: drawRectangle,
-        drawBoard: drawBoard
+        drawBoard: drawBoard,
+        drawPlayer: drawPlayer
     };
 
     Object.defineProperty(api, 'context', {

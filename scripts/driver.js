@@ -1,20 +1,13 @@
-//a snake game by Ryan Mecham
-MazeGame.main = (function (graphics) {
+//a maze game by Ryan Mecham
+MazeGame.main = (function (graphics, objects) {
     //general globals
-    var g_newGameBtn = document.getElementById('newgame');
     var g_lastTimeStamp = performance.now();
-    var g_elapsedTime = 0;
 
     //board constants
     const CANVAS_WIDTH = 500;
     const CANVAS_HEIGHT = 500;
 
     //gameplay constants
-    const NUM_SNAKES = 1;
-    const INITIAL_SNAKE_LEN = 1;
-    const APPLE_INCR_LEN = 3;
-    const NUM_APPLES = 1;
-    const NUM_WALLS = 15;
     const MOVE_BUFFER_LEN = 1;
     const MOVE_SPEED = 1;
     const MS_PER_MOVE = 150;
@@ -23,7 +16,7 @@ MazeGame.main = (function (graphics) {
     var GAME_WIDTH = 5;//5x5, 10x10, 15x15, 20x20
     var GAME_HEIGHT = 5;
     var CELL_WIDTH = CANVAS_WIDTH / GAME_WIDTH;//for use if using non-square gameboard
-    var CELL_HEIGHT = CANVAS_HEIGHT / GAME_HEIGHT;//for use if using non-square gameboard
+    var CELL_HEIGHT = CANVAS_HEIGHT / GAME_HEIGHT;//for use if using non-square gameboard (I am using only square gameboards)
     var CELL_SIZE = CELL_WIDTH;//only square game boards allowed for now :)
 
     var SNAKES = [];//array of snake objects
@@ -86,30 +79,36 @@ MazeGame.main = (function (graphics) {
 
     function init() {
         clear_game();
-        SNAKES = [];
         const MAZE_SIZE_TO_GAME_SIZE_MULTIPLIER = 3;//because each cell in a 5x5 maze will consist of 9 actual game cells 
         //set maze size
         let mazeSize = getMazeSize();
+        console.log(mazeSize)
         GAME_WIDTH = mazeSize.width;
         GAME_HEIGHT = mazeSize.height;
         CELL_WIDTH = CANVAS_WIDTH / GAME_WIDTH;//for use if using non-square gameboard
         CELL_HEIGHT = CANVAS_HEIGHT / GAME_HEIGHT;//for use if using non-square gameboard
         CELL_SIZE = CELL_WIDTH;//only square game boards allowed for now :)
 
-        GAME_GRID = makeMaze(GAME_WIDTH * MAZE_SIZE_TO_GAME_SIZE_MULTIPLIER, GAME_HEIGHT * MAZE_SIZE_TO_GAME_SIZE_MULTIPLIER);
-        // printMazeString(unparsedMaze);
-        // GAME_GRID = parseMazeEdges(unparsedMaze);
-        // unparsedMaze = null;
-        console.log(GAME_GRID)
+        GAME_GRID = objects.Maze({
+            width: GAME_WIDTH * MAZE_SIZE_TO_GAME_SIZE_MULTIPLIER,
+            height: GAME_HEIGHT * MAZE_SIZE_TO_GAME_SIZE_MULTIPLIER
+        });
+
+        //for now start is always top-left and end is always bottom-right
+        //TODO: consider making these random or place end at farthest point from start
+        GAME_GRID[0][0].isOccupied = true;//start at top left of screen
+        GAME_GRID[0][0].isStart = true;//start at top left of screen
+        // PLAYER.x = 0;
+        // PLAYER.y = 0;
+
+        GAME_GRID[GAME_HEIGHT - 1][GAME_WIDTH - 1].isFinish = true;
+
+        console.log(GAME_GRID);
 
         requestAnimationFrame(gameLoop);
     }
 
     function update() {
-        for (let snake of SNAKES) {
-            snake.updatePosition();
-        }
-        updateScores();
     }
 
     function render() {
@@ -117,19 +116,23 @@ MazeGame.main = (function (graphics) {
         graphics.context.save();
         // console.log('here', GAME_WIDTH)
         graphics.drawBoard(GAME_GRID, { w: GAME_WIDTH, h: GAME_HEIGHT }, CELL_SIZE);
+        // graphics.drawPlayer(PLAYER);
         graphics.context.restore();
     }
 
     function gameLoop(timestamp) {
         if (!GAME_OVER) {
-            g_elapsedTime = timestamp - g_lastTimeStamp;
-            update();
-            render();
+            let elapsedTime = timestamp - g_lastTimeStamp;
+
+            // processInput(elapsedTime);
+            update(elapsedTime);
+            render(elapsedTime);
 
             g_lastTimeStamp = timestamp;
             requestAnimationFrame(gameLoop);
         }
     }
 
-    g_newGameBtn.addEventListener('click', init)
-})(MazeGame.graphics);
+    document.getElementById('newgame').addEventListener('click', init);
+
+}(MazeGame.graphics, MazeGame.objects));

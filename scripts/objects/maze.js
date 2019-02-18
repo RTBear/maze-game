@@ -1,9 +1,29 @@
-function makeMaze(width = 15, height = 15) {
-    let shapeX = width;
-    let shapeY = height;
+// ------------------------------------------------------------------------
+//
+// Creates a Maze object, TODO: with functions for managing state.
+//
+// spec = {
+//      width: ,//width of maze * 3 to allow for simple computing of edges
+//      height: ,//height of maze * 3 to allow for simple computing of edges
+// }
+//
+// ------------------------------------------------------------------------
+MazeGame.objects.Maze = function(spec) {
+    'use strict';
 
-    console.log('w', width, 'sx', shapeX);
-    console.log('h', height, 'sy', shapeY);
+    if (
+        typeof spec == 'undefined'
+        || typeof spec.width == 'undefined'
+        || typeof spec.height == 'undefined'
+    ) {
+        throw "invalid maze spec";
+    }
+
+    let shapeX = spec.width;
+    let shapeY = spec.height;
+
+    console.log('w', shapeX, 'px', shapeX / 3);
+    console.log('h', shapeY, 'py', shapeY / 3);
 
     // build actual maze
     var maze = blankBoard(shapeX = shapeX, shapeY = shapeY);
@@ -18,6 +38,8 @@ function makeMaze(width = 15, height = 15) {
     maze[y][x].isPassage = true;//make the cell a passage
     let neighbors = getNeighbors(x, y);
     connectWithNeighbors(neighbors, x, y);//start connecting interior
+
+    // printMazeString(maze);
 
     return parseMazeEdges(maze);
 
@@ -67,7 +89,7 @@ function makeMaze(width = 15, height = 15) {
     function parseMazeEdges(maze) {//maze is 2d array representation of a maze
         let shapeY = maze.length;
         let shapeX = maze[0].length;
-    
+
         let parsedMaze = [];
         for (let i = 1; i < shapeY; i += 3) {//for each row
             var row = [];
@@ -75,13 +97,13 @@ function makeMaze(width = 15, height = 15) {
                 row.push(new Cell({
                     isPassage: true,
                     edge: {
-                        up: ! maze[i - 1][j].isPassage,//use not because edge.up == true sounds like up is blocked
-                        right: ! maze[i][j + 1].isPassage,
-                        down: ! maze[i + 1][j].isPassage,
-                        left: ! maze[i][j - 1].isPassage
+                        up: !maze[i - 1][j].isPassage,//use not because edge.up == true sounds like up is blocked
+                        right: !maze[i][j + 1].isPassage,
+                        down: !maze[i + 1][j].isPassage,
+                        left: !maze[i][j - 1].isPassage
                     },
-                    x: Math.trunc(j/3),//remember, 3 is "width" of an unparsed cell
-                    y: Math.trunc(i/3)
+                    x: Math.trunc(j / 3),//remember, 3 is "width" of an unparsed cell
+                    y: Math.trunc(i / 3)
                 }));
             }
             parsedMaze.push(row);
@@ -91,29 +113,45 @@ function makeMaze(width = 15, height = 15) {
 
 }
 
-function Cell(spec) {
+function Cell(spec) { //TODO: consider moving to own file
     let isPassage = false; //default
     let isOccupied = false; //default
     let containsBreadcrumb = false; //default
     let partOfShortestPath = false; //default
+    let isFinish = false; //default
+    let isStart = false; //default
     let x = 0; //default
     let y = 0; //default
 
-    isPassage = spec.isPassage;
-    isOccupied = spec.isOccupied;
-    containsBreadcrumb = spec.containsBreadcrumb;
-    partOfShortestPath = spec.partOfShortestPath;
-    x = spec.x;
-    y = spec.y;
+    if (typeof spec.isPassage != 'undefined') {
+        isPassage = spec.isPassage;
+    }
+    if (typeof spec.isOccupied != 'undefined') {
+        isOccupied = spec.isOccupied;
+    }
+    if (typeof spec.containsBreadcrumb != 'undefined') {
+        containsBreadcrumb = spec.containsBreadcrumb;
+    }
+    if (typeof spec.partOfShortestPath != 'undefined') {
+        partOfShortestPath = spec.partOfShortestPath;
+    }
+    if (typeof spec.x != 'undefined') {
+        x = spec.x;
+    }
+    if (typeof spec.y != 'undefined') {
+        y = spec.y;
+    }
 
     //cell edges(optional)
     edge = spec.edge;
 
     let thisCell = {
         isPassage: isPassage,
-        isOccupied: isOccupied,
+        isOccupied: isOccupied,//this may not be needed once player is aware of own position
         containsBreadcrumb: containsBreadcrumb,
         partOfShortestPath: partOfShortestPath,
+        isFinish: isFinish,
+        isStart: isStart,
         edge: edge,
         x: x,
         y: y
@@ -148,7 +186,7 @@ function blankBoard(shapeX = 5, shapeY = 5) {//create 2d array of Cell objects t
     for (let i = 0; i < shapeY; i++) {//for each row
         var row = [];
         for (let j = 0; j < shapeX; j++) {
-            row.push(new Cell({ 
+            row.push(new Cell({
                 isPassage: false,
                 x: j,
                 y: i
