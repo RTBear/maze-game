@@ -87,7 +87,7 @@ MazeGame.main = (function (graphics) {
     function init() {
         clear_game();
         SNAKES = [];
-        const MAZE_SIZE_TO_GAME_SIZE_MULTIPLIER = 1;//because each cell in a 5x5 maze will consist of 9 actual game cells 
+        const MAZE_SIZE_TO_GAME_SIZE_MULTIPLIER = 3;//because each cell in a 5x5 maze will consist of 9 actual game cells 
         //set maze size
         let mazeSize = getMazeSize();
         GAME_WIDTH = mazeSize.width * MAZE_SIZE_TO_GAME_SIZE_MULTIPLIER;
@@ -113,7 +113,7 @@ MazeGame.main = (function (graphics) {
     function render() {
         graphics.clear();
         graphics.context.save();
-        console.log('here', GAME_WIDTH)
+        // console.log('here', GAME_WIDTH)
         graphics.drawBoard(GAME_GRID, { w: GAME_WIDTH, h: GAME_HEIGHT }, CELL_SIZE);
         graphics.context.restore();
     }
