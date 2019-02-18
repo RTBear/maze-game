@@ -13,8 +13,8 @@ function makeMaze(width = 15, height = 15) {
 
     // build actual maze
     var maze = blankBoard(shapeX = shapeX, shapeY = shapeY);
-    console.log(maze);
-    printMazeString(maze);
+    // console.log(maze);
+    // printMazeString(maze);
 
     //generate maze with random "seed" cell
     // let x = getRandomInt(shapeX - 1);
@@ -127,10 +127,10 @@ function blankBoard(shapeX = 5, shapeY = 5) {//create 2d array of Cell objects t
     return a;
 }
 
-let maze = makeMaze(25, 15);
-console.log(maze);
-printMazeString(maze);
+// let maze = makeMaze(25, 15);
+// console.log(maze);
+// printMazeString(maze);
 
-let maze2 = makeMaze(10, 10);
-console.log(maze2);
-printMazeString(maze2);
+// let maze2 = makeMaze(10, 10);
+// console.log(maze2);
+// printMazeString(maze2);

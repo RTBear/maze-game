@@ -1,4 +1,4 @@
-SnakeGame.graphics = (function () {
+MazeGame.graphics = (function () {
     'use strict';
 
     let canvas = document.getElementById('game-canvas');
@@ -8,37 +8,44 @@ SnakeGame.graphics = (function () {
         context.clearRect(0, 0, canvas.width, canvas.height);
     }
 
-    function drawBoard(board,dims,cell_size){
-        for(let i=0; i<dims.w; i++){
-            for(let j=0; j<dims.h; j++){
-                drawCell(board[i][j],i,j,cell_size);
+    function drawBoard(board, dims, cell_size) {
+        for (let i = 0; i < dims.w; i++) {
+            for (let j = 0; j < dims.h; j++) {
+                drawCell(board[i][j], i, j, cell_size);
             }
         }
     }
 
-    function drawCell(cell,x,y,cell_size){
+    function drawCell(cell, x, y, cell_size) {
         let spec = {
             // strokeStyle: snake.strokeColor,
             // fillStyle: snake.fillColor,
             lineWidth: 3,
-            x: x*cell_size,
-            y: y*cell_size,
+            x: x * cell_size,
+            y: y * cell_size,
             w: cell_size,
             h: cell_size
         }
-        if(cell.content === 'empty'){
+        if (cell.isPassage === true) {
             spec.strokeStyle = 'rgb(150, 150, 150)';
             spec.fillStyle = 'rgb(169, 169, 169)';
-        }else if(cell.content === 'wall'){
+        } else if (cell.isPassage === false) {
             spec.strokeStyle = 'rgb(50, 50, 50)';
             spec.fillStyle = 'rgb(100, 100, 100)';
-        }else if(cell.content === 'snake'){
-            spec.strokeStyle = 'rgb(1, 196, 24)';
-            spec.fillStyle = 'rgb(0, 229, 26)';
-        }else if(cell.content === 'apple'){
-            spec.strokeStyle = 'rgb(150, 0, 0)';
-            spec.fillStyle = 'rgb(255, 0, 0)';
         }
+        // if(cell.content === 'empty'){
+        //     spec.strokeStyle = 'rgb(150, 150, 150)';
+        //     spec.fillStyle = 'rgb(169, 169, 169)';
+        // }else if(cell.content === 'wall'){
+        //     spec.strokeStyle = 'rgb(50, 50, 50)';
+        //     spec.fillStyle = 'rgb(100, 100, 100)';
+        // }else if(cell.content === 'snake'){
+        //     spec.strokeStyle = 'rgb(1, 196, 24)';
+        //     spec.fillStyle = 'rgb(0, 229, 26)';
+        // }else if(cell.content === 'apple'){
+        //     spec.strokeStyle = 'rgb(150, 0, 0)';
+        //     spec.fillStyle = 'rgb(255, 0, 0)';
+        // }
         drawRectangle(spec);
     }
 
@@ -52,7 +59,7 @@ SnakeGame.graphics = (function () {
         //     w = canvas.width / 2,
         //     h = canvas.height / 2
         // }
-        if (!spec){
+        if (!spec) {
             console.log('Rectangle Spec is undefined');
             return;
         }
