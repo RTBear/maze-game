@@ -1,4 +1,4 @@
-function maze(width = 81, height = 51) {
+function makeMaze(width = 15, height = 15) {
     let WALL = 0;
     let PASSAGE = 1;
     // only odd shapes
@@ -6,23 +6,24 @@ function maze(width = 81, height = 51) {
     let shapeY = Math.trunc(height / 2) * 2 + 1;
     console.log('w', width, 'sx', shapeX)
     console.log('h', height, 'sy', shapeY)
-    
+
     // build actual maze
-    var Z = blankBoard(shapeX = shapeX, shapeY = shapeY, borderVal = WALL, fillVal = WALL)
-    console.log(Z)
-    print2dArr(Z)
-    
+    var maze = blankBoard(shapeX = shapeX, shapeY = shapeY, borderVal = WALL, fillVal = WALL)
+    console.log(maze)
+    print2dArr(maze)
+
     let x = getRandomInt(shapeX - 1)
     let y = getRandomInt(shapeY - 1)
 
     // let x = 0;
     // let y = 0;
-    
+
     let neighbors = getNeighbors(x, y);
-    Z[y][x] = PASSAGE;//make the cell a passage
-    connectWithNeighbors(neighbors, x, y);
-    
-    print2dArr(Z)
+    maze[y][x] = PASSAGE;//make the cell a passage
+    connectWithNeighbors(neighbors, x, y);//start connecting interior
+
+    return maze
+    // print2dArr(maze)
 
     function connectWithNeighbors(neighbors, x, y) {
         //try to connect with random neighbor if they are a passage
@@ -31,11 +32,11 @@ function maze(width = 81, height = 51) {
             let neigborNum = getRandomInt(neighbors.length - 1);
             let y2 = neighbors[neigborNum][0];//random neighbor
             let x2 = neighbors[neigborNum][1];
-            if (Z[y2][x2] == WALL) {//if only one of the two cells divided by the wall at connY, connX is a passage, make the whole thing a passage
-                Z[y2][x2] = PASSAGE;
+            if (maze[y2][x2] == WALL) {//if only one of the two cells divided by the wall at connY, connX is a passage, make the whole thing a passage
+                maze[y2][x2] = PASSAGE;
                 let connY = y2 + Math.trunc((y - y2) / 2);
                 let connX = x2 + Math.trunc((x - x2) / 2);
-                Z[connY][connX] = PASSAGE;
+                maze[connY][connX] = PASSAGE;
                 connectWithNeighbors(getNeighbors(x2, y2), x2, y2);
             }
             neighbors.splice(neigborNum, 1);
@@ -60,6 +61,31 @@ function maze(width = 81, height = 51) {
         return neighbors;
     }
 
+}
+
+function Cell(spec) {
+    let isPassage = false; //default
+    let isOccupied = false; //default
+    let containsBreadcrumb = false; //default
+    let partOfShortestPath = false; //default
+
+    isPassage = spec.isPassage;
+    isOccupied = spec.isOccupied;
+    containsBreadcrumb = spec.containsBreadcrumb;
+    partOfShortestPath = spec.partOfShortestPath;
+
+    Cell.prototype.toString = function () {
+        return (this.isPassage) ? '1' : '0';
+    }
+
+    let thisCell = {
+        isPassage: isPassage,
+        isOccupied: isOccupied,
+        containsBreadcrumb: containsBreadcrumb,
+        partOfShortestPath: partOfShortestPath
+    };
+
+    return thisCell;
 }
 
 //credit for getRandomInt function goes to [alienriver49 and Ionut G. Stan] 
@@ -98,4 +124,5 @@ function blankBoard(shapeX = 5, shapeY = 5, borderVal = 1, fillVal = 0) {//creat
     return a;
 }
 
-maze(20, 15, complexity = 1, density = 15);
+let maze = makeMaze(25, 15);
+print2dArr(maze)
