@@ -51,7 +51,7 @@ MazeGame.main = (function (graphics, objects, input) {
         // for (let snake of SNAKES) {
         //     HIGH_SCORES.push(snake.score);
         // }
-        HIGH_SCORES.push(PLAYER.score + ' : ' + GAME_WIDTH + 'x' + GAME_HEIGHT + ' : ' + SOLVE_TIME);
+        HIGH_SCORES.push(PLAYER.score + ' : ' + GAME_WIDTH + 'x' + GAME_HEIGHT + ' : ' + parseTime(SOLVE_TIME));
         HIGH_SCORES.sort(function (a, b) { return a - b; });//default sort is alphabetical
         HIGH_SCORES.reverse();
         let highscoresDiv = document.getElementById('high-scores');
@@ -67,7 +67,12 @@ MazeGame.main = (function (graphics, objects, input) {
 
     function updateScores() {
         let scoreDiv = document.getElementById('scores');
-        scoreDiv.innerHTML = '<p class="text-center">Current Score: <span id="score">' + PLAYER.score + '</span></p>'
+        scoreDiv.innerHTML = '<p class="text-center">Current Score: <span id="score">' + PLAYER.score + '</span></p>';
+    }
+
+    function updateSolveTime() {
+        let scoreDiv = document.getElementById('solve-time');
+        scoreDiv.innerHTML = '<span>' + parseTime(SOLVE_TIME) + '</span>';
     }
 
     function gameover() {
@@ -75,17 +80,6 @@ MazeGame.main = (function (graphics, objects, input) {
         let gameoverDiv = document.getElementById('gameover');
         gameoverDiv.classList.remove('hidden');
         updateHighScores();
-    }
-
-    function clear_game() {
-        GAME_GRID = null;
-        GAME_OVER = false;
-        let gameoverDiv = document.getElementById('gameover');
-        gameoverDiv.classList.add('hidden');
-        g_showBreadcrumbs = false;
-        g_showHint = false;
-        g_showShortestPath = false;
-        PLAYER.reset();
     }
 
     function getMazeSize() {
@@ -190,6 +184,18 @@ MazeGame.main = (function (graphics, objects, input) {
         }
     }
 
+    function clear_game() {
+        GAME_GRID = null;
+        GAME_OVER = false;
+        let gameoverDiv = document.getElementById('gameover');
+        gameoverDiv.classList.add('hidden');
+        g_showBreadcrumbs = false;
+        g_showHint = false;
+        g_showShortestPath = false;
+        SOLVE_TIME = 0;
+        PLAYER.reset();
+    }
+
     function init() {
         clear_game();
         const MAZE_SIZE_TO_GAME_SIZE_MULTIPLIER = 3;//because each cell in a 5x5 maze will consist of 9 actual game cells 
@@ -264,6 +270,7 @@ MazeGame.main = (function (graphics, objects, input) {
             left: !GAME_GRID[PLAYER.location.y][PLAYER.location.x].edge.left
         });
         updateScores();
+        updateSolveTime();
         SOLVE_TIME += elapsedTime;
         console.log(SOLVE_TIME, parseTime(SOLVE_TIME));
     }
