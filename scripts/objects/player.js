@@ -113,6 +113,10 @@ MazeGame.objects.Player = function (spec) {
         }
     }
 
+    function updateSize(size){
+        
+    }
+
     function reset() {
         console.log('----------------------')
         console.log('RESET')

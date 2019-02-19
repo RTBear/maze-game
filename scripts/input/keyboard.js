@@ -5,7 +5,9 @@ MazeGame.input.Keyboard = function () {
     };
 
     function keyPress(e) {
-        that.keys[e.key] = e.timeStamp;
+        if (that.keys[e.key] != 'expired') {
+            that.keys[e.key] = e.timeStamp;
+        }
     }
 
     function keyRelease(e) {
@@ -15,8 +17,11 @@ MazeGame.input.Keyboard = function () {
     that.update = function (elapsedTime) {
         for (let key in that.keys) {
             if (that.keys.hasOwnProperty(key)) {
-                if (that.handlers[key]) {
-                    that.handlers[key](elapsedTime);
+                if (that.keys[key] != 'expired') {
+                    if (that.handlers[key]) {
+                        that.handlers[key](elapsedTime);
+                        that.keys[key] = 'expired';
+                    }
                 }
             }
         }
