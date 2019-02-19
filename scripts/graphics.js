@@ -8,6 +8,24 @@ MazeGame.graphics = (function () {
         context.clearRect(0, 0, canvas.width, canvas.height);
     }
 
+    function drawBreadcrumbs(player) {
+        //bc is an array of location objects of form {x: <int>, y: <int>}
+        console.log('bc',player.breadcrumbs)
+        let w = player.gameSize.width / 4;
+        let h = player.gameSize.width / 4;
+        for (let crumb of player.breadcrumbs) {
+            drawRectangle({
+                w: w,
+                h: h,
+                x: (crumb.x * player.gameSize.width) + (player.gameSize.width - w) / 2,
+                y: (crumb.y * player.gameSize.height) + (player.gameSize.width - h) / 2,
+                fillStyle: 'rgba(0,0,200,.2)',
+                strokeStyle: 'rgba(0,0,200,.2)',
+                lineWidth: 0
+            });
+        }
+    }
+
     function drawPlayer(player) {
         //TODO:draw player on board/canvas
         //player should know own direction and coordinates
@@ -94,18 +112,6 @@ MazeGame.graphics = (function () {
             }
         }
 
-        // if (cell.isOccupied) {//TODO: move to something like drawPlayer() which will handle direction and such. Player should know own location.
-        //     drawRectangle({
-        //         x: cell.x * cell_size / 2 + cell_size / 4,
-        //         y: cell.y * cell_size / 2 + cell_size / 4,
-        //         w: cell_size / 2,
-        //         h: cell_size / 2,
-        //         fillStyle: 'rgba(0,0,200,1)',
-        //         strokeStyle: 'rgba(0,0,200,1)',
-        //         lineWidth: 0
-        //     });
-        // }
-
     }
 
     function drawRectangle(spec) {
@@ -182,7 +188,8 @@ MazeGame.graphics = (function () {
         Texture: Texture,
         drawRectangle: drawRectangle,
         drawBoard: drawBoard,
-        drawPlayer: drawPlayer
+        drawPlayer: drawPlayer,
+        drawBreadcrumbs: drawBreadcrumbs,
     };
 
     Object.defineProperty(api, 'context', {

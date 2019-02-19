@@ -115,8 +115,6 @@ MazeGame.objects.Maze = function(spec) {
 
 function Cell(spec) { //TODO: consider moving to own file
     let isPassage = false; //default
-    let isOccupied = false; //default
-    let containsBreadcrumb = false; //default
     let partOfShortestPath = false; //default
     let isFinish = false; //default
     let isStart = false; //default
@@ -125,12 +123,6 @@ function Cell(spec) { //TODO: consider moving to own file
 
     if (typeof spec.isPassage != 'undefined') {
         isPassage = spec.isPassage;
-    }
-    if (typeof spec.isOccupied != 'undefined') {
-        isOccupied = spec.isOccupied;
-    }
-    if (typeof spec.containsBreadcrumb != 'undefined') {
-        containsBreadcrumb = spec.containsBreadcrumb;
     }
     if (typeof spec.partOfShortestPath != 'undefined') {
         partOfShortestPath = spec.partOfShortestPath;
@@ -147,8 +139,6 @@ function Cell(spec) { //TODO: consider moving to own file
 
     let thisCell = {
         isPassage: isPassage,
-        isOccupied: isOccupied,//this may not be needed once player is aware of own position
-        containsBreadcrumb: containsBreadcrumb,
         partOfShortestPath: partOfShortestPath,
         isFinish: isFinish,
         isStart: isStart,

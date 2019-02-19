@@ -20,6 +20,9 @@ MazeGame.main = (function (graphics, objects, input) {
     var CELL_WIDTH = CANVAS_WIDTH / GAME_WIDTH;//for use if using non-square gameboard
     var CELL_HEIGHT = CANVAS_HEIGHT / GAME_HEIGHT;//for use if using non-square gameboard (I am using only square gameboards)
     var CELL_SIZE = CELL_WIDTH;//only square game boards allowed for now :)
+    var g_showShortestPath = false;//show shortest path to finish
+    var g_showBreadcrumbs = false;//show all visited squares
+    var g_showHint = false;//show next best square
 
     var GAME_GRID = null;//data structure for game board
     var PLAYER = objects.Player({
@@ -84,6 +87,12 @@ MazeGame.main = (function (graphics, objects, input) {
         }
     }
 
+    function toggleShortestPath(){ g_showShortestPath = !g_showShortestPath; }
+    
+    function toggleBreadCrumbs(){ g_showBreadcrumbs = !g_showBreadcrumbs; console.log('bc toggle')}
+
+    function toggleHint(){ g_showHint = !g_showHint; }
+
     function init() {
         clear_game();
         const MAZE_SIZE_TO_GAME_SIZE_MULTIPLIER = 3;//because each cell in a 5x5 maze will consist of 9 actual game cells 
@@ -103,7 +112,6 @@ MazeGame.main = (function (graphics, objects, input) {
 
         //for now start is always top-left and end is always bottom-right
         //TODO: consider making these random or place end at farthest point from start
-        GAME_GRID[0][0].isOccupied = true;//start at top left of screen
         GAME_GRID[0][0].isStart = true;//start at top left of screen
 
         PLAYER.updateCanMove({
@@ -137,14 +145,20 @@ MazeGame.main = (function (graphics, objects, input) {
     function render(elapsedTime) {
         graphics.clear();
         graphics.context.save();
-        // console.log('here', GAME_WIDTH)
         //renderer.maze.render(GAME_GRID)//this would require setting up renderer as well as making game_grid its own, more robust, object that stores stuff like game_width, cell_size, etc.
         graphics.drawBoard(GAME_GRID, { w: GAME_WIDTH, h: GAME_HEIGHT }, CELL_SIZE);
         //TODO draw scoreboard
-        graphics.context.restore();
-
-        graphics.context.save();
         graphics.drawPlayer(PLAYER);
+        console.log(g_showBreadcrumbs);
+        if(g_showBreadcrumbs){
+            graphics.drawBreadcrumbs(PLAYER);
+        }
+        if(g_showShortestPath){
+            // graphics.drawShortestPath(SHORTEST_PATH);
+        }
+        if(g_showHint){
+            // graphics.drawHint(HINT);
+        }
         graphics.context.restore();
     }
 
@@ -183,5 +197,10 @@ MazeGame.main = (function (graphics, objects, input) {
     myKeyboard.register('l', PLAYER.moveRight);
     myKeyboard.register('k', PLAYER.moveDown);
     myKeyboard.register('j', PLAYER.moveLeft);
+
+    myKeyboard.register('p', toggleShortestPath);
+    myKeyboard.register('b', toggleBreadCrumbs);
+    myKeyboard.register('h', toggleHint);
+
 
 }(MazeGame.graphics, MazeGame.objects, MazeGame.input));

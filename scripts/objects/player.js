@@ -34,18 +34,18 @@ MazeGame.objects.Player = function (spec) {
     }
 
     // spec = {
-        //      imageSrc: ,   //[(relative) file path] Web server location of the image or sprite
-        //      location: { x: , y: }, //[integer] location on gameboard (not in canvas pixels)
-        //      gameSize: { width: , height: }, //[integer] size relative to gameboard (typically the same size as cell_size)
-        //      renderSize: { width: , height: }, //[percent (0-1)] size to render relative to gameSize (eg take full or half cell)
-        //      direction: ,//direction player is facing
-        //      canMove: { //object full of booleans denoting available movement directions
-        //          up: ,
-        //          right: ,
-        //          down: ,
-        //          left: 
-        //      },
-        // }
+    //      imageSrc: ,   //[(relative) file path] Web server location of the image or sprite
+    //      location: { x: , y: }, //[integer] location on gameboard (not in canvas pixels)
+    //      gameSize: { width: , height: }, //[integer] size relative to gameboard (typically the same size as cell_size)
+    //      renderSize: { width: , height: }, //[percent (0-1)] size to render relative to gameSize (eg take full or half cell)
+    //      direction: ,//direction player is facing
+    //      canMove: { //object full of booleans denoting available movement directions
+    //          up: ,
+    //          right: ,
+    //          down: ,
+    //          left: 
+    //      },
+    // }
 
     let initial_location_x = spec.location.x;
     let initial_location_y = spec.location.y;
@@ -59,6 +59,7 @@ MazeGame.objects.Player = function (spec) {
     };
 
     let score = 0;
+    let breadcrumbs = [];
 
     function moveForward() {
         if (spec.direction === Directions.up && spec.canMove.up) {
@@ -80,8 +81,17 @@ MazeGame.objects.Player = function (spec) {
         //do stuff
     }
 
+    function addBreadcrumb(crumb){
+        breadcrumbs.push(crumb);
+        //TODO maybe make list contain only unique locations
+    }
+
     function moveUp() {
         if (spec.canMove.up) {
+            addBreadcrumb({
+                x: spec.location.x,
+                y: spec.location.y
+            });
             spec.location.y -= 1;
             disableMovementUntilUpdate();
         }
@@ -89,6 +99,10 @@ MazeGame.objects.Player = function (spec) {
 
     function moveRight() {
         if (spec.canMove.right) {
+            addBreadcrumb({
+                x: spec.location.x,
+                y: spec.location.y
+            });
             spec.location.x += 1;
             disableMovementUntilUpdate();
         }
@@ -96,6 +110,10 @@ MazeGame.objects.Player = function (spec) {
 
     function moveDown() {
         if (spec.canMove.down) {
+            addBreadcrumb({
+                x: spec.location.x,
+                y: spec.location.y
+            });
             spec.location.y += 1;
             disableMovementUntilUpdate();
         }
@@ -103,6 +121,10 @@ MazeGame.objects.Player = function (spec) {
 
     function moveLeft() {
         if (spec.canMove.left) {
+            addBreadcrumb({
+                x: spec.location.x,
+                y: spec.location.y
+            });
             spec.location.x -= 1;
             disableMovementUntilUpdate();
         }
@@ -126,7 +148,7 @@ MazeGame.objects.Player = function (spec) {
         }
     }
 
-    function updateSize(size){
+    function updateSize(size) {
         spec.gameSize.width = size.gameSize.width;
         spec.gameSize.height = size.gameSize.height;
 
@@ -135,13 +157,13 @@ MazeGame.objects.Player = function (spec) {
     }
 
     function reset() {
-        console.log('----------------------')
-        console.log('RESET')
-        console.log('----------------------')
-        console.log('l',initial_location_x,initial_location_y);
+        // console.log('----------------------')
+        // console.log('RESET')
+        // console.log('----------------------')
         spec.location.x = initial_location_x;
         spec.location.y = initial_location_y;
         spec.direction = initial_direction;
+        breadcrumbs = [];
     }
 
     let api = {
@@ -157,7 +179,8 @@ MazeGame.objects.Player = function (spec) {
         get direction() { return spec.direction; },
         get gameSize() { return spec.gameSize; },
         get renderSize() { return spec.renderSize; },
-        get score() { return spec.score; },
+        get score() { return score; },
+        get breadcrumbs() { return breadcrumbs; },
     }
 
     return api;
