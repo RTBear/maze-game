@@ -58,7 +58,8 @@ MazeGame.objects.Player = function (spec) {
         left: 'left',
     };
 
-    let score = 0;
+    let score = 999;//TODO: if I am going to just start with some high number, then harder mazes need to start with a higher number
+    
     let breadcrumbs = [];
 
     function moveForward() {
@@ -83,6 +84,7 @@ MazeGame.objects.Player = function (spec) {
 
     function addBreadcrumb(crumb){
         breadcrumbs.push(crumb);
+        score -= 1;
         //TODO maybe make list contain only unique locations
     }
 
