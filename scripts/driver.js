@@ -44,12 +44,14 @@ MazeGame.main = (function (graphics, objects, input) {
     })
     var GAME_OVER = false;
     var HIGH_SCORES = [];
+    var SOLVE_TIME = 0;//time it took to solve maze
 
 
     function updateHighScores() {
         // for (let snake of SNAKES) {
         //     HIGH_SCORES.push(snake.score);
         // }
+        HIGH_SCORES.push(PLAYER.score + ' : ' + GAME_WIDTH + 'x' + GAME_HEIGHT + ' : ' + SOLVE_TIME);
         HIGH_SCORES.sort(function (a, b) { return a - b; });//default sort is alphabetical
         HIGH_SCORES.reverse();
         let highscoresDiv = document.getElementById('high-scores');
@@ -72,7 +74,7 @@ MazeGame.main = (function (graphics, objects, input) {
         GAME_OVER = true;
         let gameoverDiv = document.getElementById('gameover');
         gameoverDiv.classList.remove('hidden');
-        // updateHighScores();
+        updateHighScores();
     }
 
     function clear_game() {
@@ -239,6 +241,17 @@ MazeGame.main = (function (graphics, objects, input) {
         requestAnimationFrame(gameLoop);
     }
 
+    function parseTime(time){//takes time in milliseconds and returns formatted as h:mm:ss
+        let hours = Math.trunc(time / 3600000);
+        let minutes = Math.trunc(time / 60000) % 60;
+        let seconds = Math.trunc(time / 1000) % 60;
+        
+        let m_str = ((Math.trunc(minutes/10)) ? '' : '0')+minutes;
+        let s_str = ((Math.trunc(seconds/10)) ? '' : '0')+seconds;
+
+        return ''+hours+':'+m_str+':'+s_str;
+    }
+
     function update(elapsedTime) {
         // PLAYER.updateScore(elapsedTime);
         if(PLAYER.location.x == GAME_WIDTH - 1 && PLAYER.location.y == GAME_HEIGHT - 1){
@@ -251,6 +264,8 @@ MazeGame.main = (function (graphics, objects, input) {
             left: !GAME_GRID[PLAYER.location.y][PLAYER.location.x].edge.left
         });
         updateScores();
+        SOLVE_TIME += elapsedTime;
+        console.log(SOLVE_TIME, parseTime(SOLVE_TIME));
     }
 
     function render(elapsedTime) {
