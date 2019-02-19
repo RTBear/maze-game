@@ -39,7 +39,7 @@ MazeGame.objects.Maze = function(spec) {
     let neighbors = getNeighbors(x, y);
     connectWithNeighbors(neighbors, x, y);//start connecting interior
 
-    // printMazeString(maze);
+    printMazeString(maze);
 
     return parseMazeEdges(maze);
 

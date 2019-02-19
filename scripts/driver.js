@@ -87,11 +87,85 @@ MazeGame.main = (function (graphics, objects, input) {
         }
     }
 
-    function toggleShortestPath(){ g_showShortestPath = !g_showShortestPath; }
-    
-    function toggleBreadCrumbs(){ g_showBreadcrumbs = !g_showBreadcrumbs; console.log('bc toggle')}
+    function toggleShortestPath() { g_showShortestPath = !g_showShortestPath; }
 
-    function toggleHint(){ g_showHint = !g_showHint; }
+    function toggleBreadCrumbs() { g_showBreadcrumbs = !g_showBreadcrumbs; console.log('bc toggle') }
+
+    function toggleHint() { g_showHint = !g_showHint; }
+
+    let shortestPathDP = Array(GAME_HEIGHT).fill(0).map(() => Array(GAME_HEIGHT).fill(0));//dynamic programming 2d array
+    function findShortestPath(x = GAME_WIDTH - 1, y = GAME_HEIGHT - 1) {
+        // console.log(GAME_GRID[y][x]);
+        // console.log(shortestPathDP);
+
+        if (y == 0 && x == 0) {
+            return;
+        }
+
+        let canMove = {
+            up: !GAME_GRID[y][x].edge.up,//if not an edge
+            right: !GAME_GRID[y][x].edge.right,
+            down: !GAME_GRID[y][x].edge.down,
+            left: !GAME_GRID[y][x].edge.left
+        }
+
+        // for(let row = y; row >= 0; row--){
+        //     for(let col = x; col >= 0; col--){
+        //         //try to go left
+        //         if(!GAME_GRID[y][x].edge.left){
+
+        //         }else
+        //     }
+        // }
+
+        for (dir in canMove) {
+            if (canMove[dir]) {//if you can move a direction... move there
+                if (dir == UP) {
+                    console.log(x, y, UP);
+                    let y2 = y - 1;
+                    if (shortestPathDP[y2][x] == 0) {
+                        shortestPathDP[y2][x] = shortestPathDP[y][x] + 1;
+                        if (y2 == 0 && x == 0) {
+                            return;
+                        }
+                        findShortestPath(x, y2);
+                    }
+                } else if (dir == RIGHT) {
+                    console.log(x, y, RIGHT);
+                    let x2 = x + 1;
+                    if (shortestPathDP[y][x2] == 0) {
+                        shortestPathDP[y][x2] = shortestPathDP[y][x] + 1;
+                        if (y == 0 && x2 == 0) {
+                            return;
+                        }
+                        findShortestPath(x2, y);
+                    }
+                } else if (dir == DOWN) {
+                    console.log(x, y, DOWN);
+                    let y2 = y + 1;
+                    if (shortestPathDP[y2][x] == 0) {
+                        shortestPathDP[y2][x] = shortestPathDP[y][x] + 1;
+                        if (y2 == 0 && x == 0) {
+                            return;
+                        }
+                        findShortestPath(x, y2);
+                    }
+                } else if (dir == LEFT) {
+                    console.log(x, y, LEFT);
+                    let x2 = x - 1;
+                    if (shortestPathDP[y][x2] == 0) {
+                        shortestPathDP[y][x2] = shortestPathDP[y][x] + 1;
+                        if (y == 0 && x2 == 0) {
+                            return;
+                        }
+                        findShortestPath(x2, y);
+                    }
+                } else {
+                    return;
+                }
+            }
+        }
+    }
 
     function init() {
         clear_game();
@@ -128,6 +202,9 @@ MazeGame.main = (function (graphics, objects, input) {
         GAME_GRID[GAME_HEIGHT - 1][GAME_WIDTH - 1].isFinish = true;
 
         console.log(GAME_GRID);
+        findShortestPath();
+        console.log(shortestPathDP);
+
 
         requestAnimationFrame(gameLoop);
     }
@@ -149,14 +226,13 @@ MazeGame.main = (function (graphics, objects, input) {
         graphics.drawBoard(GAME_GRID, { w: GAME_WIDTH, h: GAME_HEIGHT }, CELL_SIZE);
         //TODO draw scoreboard
         graphics.drawPlayer(PLAYER);
-        console.log(g_showBreadcrumbs);
-        if(g_showBreadcrumbs){
+        if (g_showBreadcrumbs) {
             graphics.drawBreadcrumbs(PLAYER);
         }
-        if(g_showShortestPath){
+        if (g_showShortestPath) {
             // graphics.drawShortestPath(SHORTEST_PATH);
         }
-        if(g_showHint){
+        if (g_showHint) {
             // graphics.drawHint(HINT);
         }
         graphics.context.restore();
