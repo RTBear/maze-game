@@ -112,6 +112,10 @@ MazeGame.main = (function (graphics, objects, input) {
             down: !GAME_GRID[0][0].edge.down,
             left: !GAME_GRID[0][0].edge.left
         });
+        PLAYER.updateSize({
+            gameSize: { width: CELL_WIDTH, height: CELL_WIDTH },
+            renderSize: { width: CELL_WIDTH, height: CELL_WIDTH },
+        });
 
         GAME_GRID[GAME_HEIGHT - 1][GAME_WIDTH - 1].isFinish = true;
 
@@ -122,10 +126,6 @@ MazeGame.main = (function (graphics, objects, input) {
 
     function update(elapsedTime) {
         // PLAYER.updateScore(elapsedTime);
-        // console.log(PLAYER)
-        // console.log(PLAYER.location)
-        // console.log(PLAYER.canMove)
-
         PLAYER.updateCanMove({
             up: !GAME_GRID[PLAYER.location.y][PLAYER.location.x].edge.up,//if not an edge
             right: !GAME_GRID[PLAYER.location.y][PLAYER.location.x].edge.right,

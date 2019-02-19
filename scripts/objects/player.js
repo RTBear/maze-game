@@ -114,7 +114,11 @@ MazeGame.objects.Player = function (spec) {
     }
 
     function updateSize(size){
-        
+        spec.gameSize.width = size.gameSize.width;
+        spec.gameSize.height = size.gameSize.height;
+
+        spec.renderSize.width = size.renderSize.width;
+        spec.renderSize.height = size.renderSize.height;
     }
 
     function reset() {
@@ -135,6 +139,7 @@ MazeGame.objects.Player = function (spec) {
         calculateScore: calculateScore,
         updateCanMove: updateCanMove,
         reset: reset,
+        updateSize: updateSize,
         get location() { return spec.location; },
         get direction() { return spec.direction; },
         get gameSize() { return spec.gameSize; },
