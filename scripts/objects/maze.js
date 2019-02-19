@@ -40,6 +40,7 @@ MazeGame.objects.Maze = function(spec) {
     connectWithNeighbors(neighbors, x, y);//start connecting interior
 
     printMazeString(maze);
+    console.log(maze)
 
     return parseMazeEdges(maze);
 
@@ -91,9 +92,9 @@ MazeGame.objects.Maze = function(spec) {
         let shapeX = maze[0].length;
 
         let parsedMaze = [];
-        for (let i = 1; i < shapeY; i += 3) {//for each row
+        for (let i = 1; i < shapeY-1; i += 3) {//for each row
             var row = [];
-            for (let j = 1; j < shapeX; j += 3) {
+            for (let j = 1; j < shapeX-1; j += 3) {
                 row.push(new Cell({
                     isPassage: true,
                     edge: {

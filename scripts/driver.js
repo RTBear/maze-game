@@ -199,6 +199,7 @@ MazeGame.main = (function (graphics, objects, input) {
         }
 
         findShortestPath();
+        console.log(GAME_GRID);
         console.log(g_shortestPath);
 
 
@@ -221,16 +222,16 @@ MazeGame.main = (function (graphics, objects, input) {
         //renderer.maze.render(GAME_GRID)//this would require setting up renderer as well as making game_grid its own, more robust, object that stores stuff like game_width, cell_size, etc.
         graphics.drawBoard(GAME_GRID, { w: GAME_WIDTH, h: GAME_HEIGHT }, CELL_SIZE);
         //TODO draw scoreboard
-        graphics.drawPlayer(PLAYER);
+        if (g_showShortestPath) {
+            graphics.drawShortestPath(gameGrid=GAME_GRID, pathGrid=g_shortestPath, x=PLAYER.location.x, y=PLAYER.location.y, size=CELL_SIZE);
+        }
         if (g_showBreadcrumbs) {
             graphics.drawBreadcrumbs(PLAYER);
-        }
-        if (g_showShortestPath) {
-            // graphics.drawShortestPath(g_shortestPath);
         }
         if (g_showHint) {
             // graphics.drawHint(HINT);
         }
+        graphics.drawPlayer(PLAYER);
         graphics.context.restore();
     }
 
@@ -273,6 +274,7 @@ MazeGame.main = (function (graphics, objects, input) {
     myKeyboard.register('p', toggleShortestPath);
     myKeyboard.register('b', toggleBreadCrumbs);
     myKeyboard.register('h', toggleHint);
+    myKeyboard.register('q', function(){console.log(PLAYER.location,PLAYER.canMove);});
 
 
 }(MazeGame.graphics, MazeGame.objects, MazeGame.input));

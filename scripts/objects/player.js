@@ -181,6 +181,7 @@ MazeGame.objects.Player = function (spec) {
         get renderSize() { return spec.renderSize; },
         get score() { return score; },
         get breadcrumbs() { return breadcrumbs; },
+        get canMove() { return spec.canMove; },
     }
 
     return api;
