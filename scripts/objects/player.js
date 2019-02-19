@@ -83,25 +83,38 @@ MazeGame.objects.Player = function (spec) {
     function moveUp() {
         if (spec.canMove.up) {
             spec.location.y -= 1;
+            disableMovementUntilUpdate();
         }
     }
 
     function moveRight() {
         if (spec.canMove.right) {
             spec.location.x += 1;
+            disableMovementUntilUpdate();
         }
     }
 
     function moveDown() {
         if (spec.canMove.down) {
             spec.location.y += 1;
+            disableMovementUntilUpdate();
         }
     }
 
     function moveLeft() {
         if (spec.canMove.left) {
             spec.location.x -= 1;
+            disableMovementUntilUpdate();
         }
+    }
+
+    function disableMovementUntilUpdate() {
+        updateCanMove({
+            up: false,
+            right: false,
+            down: false,
+            left: false,
+        });//cannot move until main game loop updates canmove
     }
 
     function updateCanMove(cm) {
