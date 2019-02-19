@@ -14,6 +14,9 @@ MazeGame.main = (function (graphics, objects, input) {
     const CANVAS_WIDTH = 500;
     const CANVAS_HEIGHT = 500;
 
+    //gameplay constants
+    const INITIAL_SCORE_MODIFIER = 2;
+
     //gameplay globals
     var GAME_WIDTH = 5;//5x5, 10x10, 15x15, 20x20
     var GAME_HEIGHT = 5;
@@ -77,6 +80,9 @@ MazeGame.main = (function (graphics, objects, input) {
         GAME_OVER = false;
         let gameoverDiv = document.getElementById('gameover');
         gameoverDiv.classList.add('hidden');
+        g_showBreadcrumbs = false;
+        g_showHint = false;
+        g_showShortestPath = false;
         PLAYER.reset();
     }
 
@@ -90,11 +96,37 @@ MazeGame.main = (function (graphics, objects, input) {
         }
     }
 
-    function toggleShortestPath() { g_showShortestPath = !g_showShortestPath; }
+    function toggleShortestPath() { 
+        let spScoreMod = 10;
+        if(!g_showShortestPath){
+            PLAYER.decrementScore(spScoreMod);
+            PLAYER.setScoreModifier(PLAYER.scoreModifier - spScoreMod);
+        }else{
+            PLAYER.setScoreModifier(PLAYER.scoreModifier + spScoreMod);
+        }
+        g_showShortestPath = !g_showShortestPath; 
+    }
 
-    function toggleBreadCrumbs() { g_showBreadcrumbs = !g_showBreadcrumbs; console.log('bc toggle') }
+    function toggleBreadCrumbs() { 
+        let bcScoreMod = 1;
+        if(!g_showBreadcrumbs){
+            PLAYER.setScoreModifier(PLAYER.scoreModifier - bcScoreMod);
+        }else{
+            PLAYER.setScoreModifier(PLAYER.scoreModifier + bcScoreMod);
+        }
+        g_showBreadcrumbs = !g_showBreadcrumbs; 
+    }
 
-    function toggleHint() { g_showHint = !g_showHint; }
+    function toggleHint() { 
+        let hScoreMod = 8;
+        if(!g_showHint){
+            PLAYER.decrementScore(hScoreMod);
+            PLAYER.setScoreModifier(PLAYER.scoreModifier - hScoreMod);
+        }else{
+            PLAYER.setScoreModifier(PLAYER.scoreModifier + hScoreMod);
+        }
+        g_showHint = !g_showHint; 
+    }
 
     function findShortestPath(x = GAME_WIDTH - 1, y = GAME_HEIGHT - 1) {
         // console.log(GAME_GRID[y][x]);
@@ -183,6 +215,7 @@ MazeGame.main = (function (graphics, objects, input) {
             down: !GAME_GRID[0][0].edge.down,
             left: !GAME_GRID[0][0].edge.left
         });
+
         PLAYER.updateSize({
             gameSize: { width: CELL_WIDTH, height: CELL_WIDTH },
             renderSize: { width: CELL_WIDTH, height: CELL_WIDTH },
@@ -190,7 +223,7 @@ MazeGame.main = (function (graphics, objects, input) {
 
         GAME_GRID[GAME_HEIGHT - 1][GAME_WIDTH - 1].isFinish = true;
 
-
+        //reset data structure to hold shortest path
         g_shortestPath = [];
         for(let i=0;i<GAME_HEIGHT;i++){
             let row = [];
@@ -199,10 +232,8 @@ MazeGame.main = (function (graphics, objects, input) {
             }
             g_shortestPath.push(row);
         }
-
         findShortestPath();
-        console.log(GAME_GRID);
-        console.log(g_shortestPath);
+        PLAYER.setScore(g_shortestPath[0][0] * INITIAL_SCORE_MODIFIER);
 
 
         requestAnimationFrame(gameLoop);
@@ -219,6 +250,7 @@ MazeGame.main = (function (graphics, objects, input) {
             down: !GAME_GRID[PLAYER.location.y][PLAYER.location.x].edge.down,
             left: !GAME_GRID[PLAYER.location.y][PLAYER.location.x].edge.left
         });
+        updateScores();
     }
 
     function render(elapsedTime) {

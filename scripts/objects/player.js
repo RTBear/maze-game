@@ -58,10 +58,18 @@ MazeGame.objects.Player = function (spec) {
         left: 'left',
     };
 
-    let score = 999;//TODO: if I am going to just start with some high number, then harder mazes need to start with a higher number
-    //scoring scheme idea: start with score of double the calculated minimum number of steps and subtract one point per move
-    
+    let score = 0;
+    let scoreModifier = 0;
     let breadcrumbs = [];
+
+    function calculateScore(){
+        let amount = -1 + scoreModifier;
+        console.log('s',amount)
+        score += amount;
+        if(score < 0){
+            score = 0;
+        }
+    }
 
     function moveForward() {
         if (spec.direction === Directions.up && spec.canMove.up) {
@@ -79,16 +87,12 @@ MazeGame.objects.Player = function (spec) {
         }
     }
 
-    function calculateScore(elapsedTime) {
-        //do stuff
-    }
-
     function addBreadcrumb(crumb){
         breadcrumbs.push(crumb);
-        score -= 1;
         //TODO maybe make list contain only unique locations
+        calculateScore();//if adding a bc this means player has moved, therefore re-calculate score
     }
-
+    
     function moveUp() {
         if (spec.canMove.up) {
             addBreadcrumb({
@@ -99,7 +103,7 @@ MazeGame.objects.Player = function (spec) {
             disableMovementUntilUpdate();
         }
     }
-
+    
     function moveRight() {
         if (spec.canMove.right) {
             addBreadcrumb({
@@ -110,7 +114,7 @@ MazeGame.objects.Player = function (spec) {
             disableMovementUntilUpdate();
         }
     }
-
+    
     function moveDown() {
         if (spec.canMove.down) {
             addBreadcrumb({
@@ -121,7 +125,7 @@ MazeGame.objects.Player = function (spec) {
             disableMovementUntilUpdate();
         }
     }
-
+    
     function moveLeft() {
         if (spec.canMove.left) {
             addBreadcrumb({
@@ -132,7 +136,7 @@ MazeGame.objects.Player = function (spec) {
             disableMovementUntilUpdate();
         }
     }
-
+    
     function disableMovementUntilUpdate() {
         updateCanMove({
             up: false,
@@ -141,7 +145,7 @@ MazeGame.objects.Player = function (spec) {
             left: false,
         });//cannot move until main game loop updates canmove
     }
-
+    
     function updateCanMove(cm) {
         spec.canMove = {
             up: cm.up,
@@ -150,25 +154,39 @@ MazeGame.objects.Player = function (spec) {
             left: cm.left,
         }
     }
-
+    
     function updateSize(size) {
         spec.gameSize.width = size.gameSize.width;
         spec.gameSize.height = size.gameSize.height;
-
+        
         spec.renderSize.width = size.renderSize.width;
         spec.renderSize.height = size.renderSize.height;
     }
-
+    
     function reset() {
-        // console.log('----------------------')
-        // console.log('RESET')
-        // console.log('----------------------')
         spec.location.x = initial_location_x;
         spec.location.y = initial_location_y;
         spec.direction = initial_direction;
         breadcrumbs = [];
+        scoreModifier = 0;
+        score = 0;
+    }
+    
+    function setScore(s) {
+        score = s;
     }
 
+    function setScoreModifier(m){
+        scoreModifier = m;
+    }
+
+    function decrementScore(d){
+        score -= d;
+        if(score < 0){
+            score = 0;
+        }
+    }
+    
     let api = {
         moveUp: moveUp,
         moveRight: moveRight,
@@ -178,14 +196,18 @@ MazeGame.objects.Player = function (spec) {
         updateCanMove: updateCanMove,
         reset: reset,
         updateSize: updateSize,
+        setScore: setScore,
+        decrementScore: decrementScore,
+        setScoreModifier: setScoreModifier,
         get location() { return spec.location; },
         get direction() { return spec.direction; },
         get gameSize() { return spec.gameSize; },
         get renderSize() { return spec.renderSize; },
         get score() { return score; },
+        get scoreModifier() { return scoreModifier; },
         get breadcrumbs() { return breadcrumbs; },
         get canMove() { return spec.canMove; },
     }
-
+    
     return api;
 }
