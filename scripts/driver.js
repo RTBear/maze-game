@@ -69,12 +69,14 @@ MazeGame.main = (function (graphics, objects, input) {
         GAME_OVER = true;
         let gameoverDiv = document.getElementById('gameover');
         gameoverDiv.classList.remove('hidden');
-        updateHighScores();
+        // updateHighScores();
     }
 
     function clear_game() {
         GAME_GRID = null;
         GAME_OVER = false;
+        let gameoverDiv = document.getElementById('gameover');
+        gameoverDiv.classList.add('hidden');
         PLAYER.reset();
     }
 
@@ -208,6 +210,9 @@ MazeGame.main = (function (graphics, objects, input) {
 
     function update(elapsedTime) {
         // PLAYER.updateScore(elapsedTime);
+        if(PLAYER.location.x == GAME_WIDTH - 1 && PLAYER.location.y == GAME_HEIGHT - 1){
+            gameover();
+        }
         PLAYER.updateCanMove({
             up: !GAME_GRID[PLAYER.location.y][PLAYER.location.x].edge.up,//if not an edge
             right: !GAME_GRID[PLAYER.location.y][PLAYER.location.x].edge.right,
@@ -229,7 +234,7 @@ MazeGame.main = (function (graphics, objects, input) {
             graphics.drawBreadcrumbs(PLAYER);
         }
         if (g_showHint) {
-            // graphics.drawHint(HINT);
+            graphics.drawHint(gameGrid=GAME_GRID, pathGrid=g_shortestPath, x=PLAYER.location.x, y=PLAYER.location.y, size=CELL_SIZE);
         }
         graphics.drawPlayer(PLAYER);
         graphics.context.restore();

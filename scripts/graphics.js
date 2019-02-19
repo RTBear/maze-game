@@ -8,6 +8,53 @@ MazeGame.graphics = (function () {
         context.clearRect(0, 0, canvas.width, canvas.height);
     }
 
+    function drawHint(gameGrid, pathGrid, x, y, size) {
+        const UP = 'up';
+        const RIGHT = 'right';
+        const DOWN = 'down';
+        const LEFT = 'left';
+        // let movesLeft = pathGrid[y][x];
+        if (pathGrid[y][x]) {//if you are not at goal
+            let canMove = {
+                up: !gameGrid[y][x].edge.up,//if not an edge
+                right: !gameGrid[y][x].edge.right,
+                down: !gameGrid[y][x].edge.down,
+                left: !gameGrid[y][x].edge.left
+            }
+
+            for (dir in canMove) {
+                if (canMove[dir]) {//if you can move a direction... move there
+                    if (dir == UP) {
+                        let y2 = y - 1;
+                        if (pathGrid[y2][x] == pathGrid[y][x] - 1) {//if I can move in a direction and that direction is the next move on shortest path...
+                            y = y2;
+                            break;
+                        }
+                    } else if (dir == RIGHT) {
+                        let x2 = x + 1;
+                        if (pathGrid[y][x2] == pathGrid[y][x] - 1) {//if I can move in a direction and that direction is the next move on shortest path...
+                            x = x2;
+                            break;
+                        }
+                    } else if (dir == DOWN) {
+                        let y2 = y + 1;
+                        if (pathGrid[y2][x] == pathGrid[y][x] - 1) {//if I can move in a direction and that direction is the next move on shortest path...
+                            y = y2;
+                            break;
+                        }
+                    } else if (dir == LEFT) {
+                        let x2 = x - 1;
+                        if (pathGrid[y][x2] == pathGrid[y][x] - 1) {//if I can move in a direction and that direction is the next move on shortest path...
+                            x = x2;
+                            break;
+                        }
+                    }
+                }
+            }
+            drawShortPathSection(x, y, size, true);
+        }
+    }
+
     function drawShortestPath(gameGrid, pathGrid, x, y, size) {
         const UP = 'up';
         const RIGHT = 'right';
@@ -54,18 +101,25 @@ MazeGame.graphics = (function () {
             drawShortPathSection(x, y, size);
         }
     }
-    function drawShortPathSection(x, y, size) {
+
+    function drawShortPathSection(x, y, size, isHint=false) {
         let w = size / 3;
         let h = size / 3;
-        drawRectangle({
+        let spec = {
             w: w,
             h: h,
             x: (x * size) + (size - w) / 2,
             y: (y * size) + (size - h) / 2,
-            fillStyle: 'rgba(226, 226, 15, 1)',
-            strokeStyle: 'rgba(226, 226, 15, 1)',
             lineWidth: 0
-        });
+        };
+        if(isHint){
+            spec.fillStyle = 'rgba(200, 200, 15, 1)';
+            spec.strokeStyle = 'rgba(160, 160, 15, 1)';
+        }else{
+            spec.fillStyle = 'rgba(226, 226, 15, 1)';
+            spec.strokeStyle = 'rgba(226, 226, 15, 1)';
+        }
+        drawRectangle(spec);
     }
 
     function drawBreadcrumbs(player) {
@@ -250,6 +304,7 @@ MazeGame.graphics = (function () {
         drawPlayer: drawPlayer,
         drawBreadcrumbs: drawBreadcrumbs,
         drawShortestPath: drawShortestPath,
+        drawHint: drawHint,
     };
 
     Object.defineProperty(api, 'context', {
