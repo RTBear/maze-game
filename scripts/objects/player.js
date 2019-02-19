@@ -59,6 +59,7 @@ MazeGame.objects.Player = function (spec) {
     };
 
     let score = 999;//TODO: if I am going to just start with some high number, then harder mazes need to start with a higher number
+    //scoring scheme idea: start with score of double the calculated minimum number of steps and subtract one point per move
     
     let breadcrumbs = [];
 
