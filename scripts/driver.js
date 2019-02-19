@@ -1,16 +1,18 @@
 //a maze game by Ryan Mecham
-MazeGame.main = (function (graphics, objects) {
+MazeGame.main = (function (graphics, objects, input) {
+    //directions
+    const UP = 'up';
+    const RIGHT = 'right';
+    const DOWN = 'down';
+    const LEFT = 'left';
+
     //general globals
     var g_lastTimeStamp = performance.now();
+    let myKeyboard = input.Keyboard();
 
     //board constants
     const CANVAS_WIDTH = 500;
     const CANVAS_HEIGHT = 500;
-
-    //gameplay constants
-    const MOVE_BUFFER_LEN = 1;
-    const MOVE_SPEED = 1;
-    const MS_PER_MOVE = 150;
 
     //gameplay globals
     var GAME_WIDTH = 5;//5x5, 10x10, 15x15, 20x20
@@ -19,21 +21,28 @@ MazeGame.main = (function (graphics, objects) {
     var CELL_HEIGHT = CANVAS_HEIGHT / GAME_HEIGHT;//for use if using non-square gameboard (I am using only square gameboards)
     var CELL_SIZE = CELL_WIDTH;//only square game boards allowed for now :)
 
-    var SNAKES = [];//array of snake objects
     var GAME_GRID = null;//data structure for game board
+    var PLAYER = objects.Player({
+        imageSrc: '/assets/images/pushpin-red.png',
+        location: { x: 0, y: 0 },
+        gameSize: { width: CELL_WIDTH, height: CELL_WIDTH },
+        renderSize: { width: CELL_WIDTH, height: CELL_WIDTH },
+        direction: RIGHT,
+        canMove: {
+            up: false,
+            right: false,
+            down: false,
+            left: false,
+        },
+    })
     var GAME_OVER = false;
     var HIGH_SCORES = [];
 
-    //directions
-    const UP = 'up';
-    const RIGHT = 'right';
-    const DOWN = 'down';
-    const LEFT = 'left';
 
     function updateHighScores() {
-        for (let snake of SNAKES) {
-            HIGH_SCORES.push(snake.score);
-        }
+        // for (let snake of SNAKES) {
+        //     HIGH_SCORES.push(snake.score);
+        // }
         HIGH_SCORES.sort(function (a, b) { return a - b; });//default sort is alphabetical
         HIGH_SCORES.reverse();
         let highscoresDiv = document.getElementById('high-scores');
@@ -49,9 +58,7 @@ MazeGame.main = (function (graphics, objects) {
 
     function updateScores() {
         let scoreDiv = document.getElementById('scores');
-        for (let snake of SNAKES) {
-            scoreDiv.innerHTML = '<p class="text-center">Current Score: <span id="score">' + snake.score + '</span></p>'
-        }
+        scoreDiv.innerHTML = '<p class="text-center">Current Score: <span id="score">' + PLAYER.score + '</span></p>'
     }
 
     function gameover() {
@@ -62,9 +69,9 @@ MazeGame.main = (function (graphics, objects) {
     }
 
     function clear_game() {
-        SNAKES = null;
         GAME_GRID = null;
         GAME_OVER = false;
+        PLAYER.reset();
     }
 
     function getMazeSize() {
@@ -83,7 +90,7 @@ MazeGame.main = (function (graphics, objects) {
         //set maze size
         let mazeSize = getMazeSize();
         console.log(mazeSize)
-        GAME_WIDTH = mazeSize.width;
+        GAME_WIDTH = mazeSize.width;//TODO: move game board into its own class/file
         GAME_HEIGHT = mazeSize.height;
         CELL_WIDTH = CANVAS_WIDTH / GAME_WIDTH;//for use if using non-square gameboard
         CELL_HEIGHT = CANVAS_HEIGHT / GAME_HEIGHT;//for use if using non-square gameboard
@@ -98,8 +105,13 @@ MazeGame.main = (function (graphics, objects) {
         //TODO: consider making these random or place end at farthest point from start
         GAME_GRID[0][0].isOccupied = true;//start at top left of screen
         GAME_GRID[0][0].isStart = true;//start at top left of screen
-        // PLAYER.x = 0;
-        // PLAYER.y = 0;
+
+        PLAYER.updateCanMove({
+            up: !GAME_GRID[0][0].edge.up,//if not an edge
+            right: !GAME_GRID[0][0].edge.right,
+            down: !GAME_GRID[0][0].edge.down,
+            left: !GAME_GRID[0][0].edge.left
+        });
 
         GAME_GRID[GAME_HEIGHT - 1][GAME_WIDTH - 1].isFinish = true;
 
@@ -108,23 +120,44 @@ MazeGame.main = (function (graphics, objects) {
         requestAnimationFrame(gameLoop);
     }
 
-    function update() {
+    function update(elapsedTime) {
+        // PLAYER.updateScore(elapsedTime);
+        // console.log(PLAYER)
+        // console.log(PLAYER.location)
+        // console.log(PLAYER.canMove)
+
+        PLAYER.updateCanMove({
+            up: !GAME_GRID[PLAYER.location.y][PLAYER.location.x].edge.up,//if not an edge
+            right: !GAME_GRID[PLAYER.location.y][PLAYER.location.x].edge.right,
+            down: !GAME_GRID[PLAYER.location.y][PLAYER.location.x].edge.down,
+            left: !GAME_GRID[PLAYER.location.y][PLAYER.location.x].edge.left
+        });
     }
 
-    function render() {
+    function render(elapsedTime) {
         graphics.clear();
         graphics.context.save();
         // console.log('here', GAME_WIDTH)
+        //renderer.maze.render(GAME_GRID)//this would require setting up renderer as well as making game_grid its own, more robust, object that stores stuff like game_width, cell_size, etc.
         graphics.drawBoard(GAME_GRID, { w: GAME_WIDTH, h: GAME_HEIGHT }, CELL_SIZE);
-        // graphics.drawPlayer(PLAYER);
+        //TODO draw scoreboard
         graphics.context.restore();
+
+        graphics.context.save();
+        graphics.drawPlayer(PLAYER);
+        graphics.context.restore();
+    }
+
+    function processInput(elapsedTime) {
+        myKeyboard.update(elapsedTime);
+        // myMouse.update(elapsedTime);
     }
 
     function gameLoop(timestamp) {
         if (!GAME_OVER) {
             let elapsedTime = timestamp - g_lastTimeStamp;
 
-            // processInput(elapsedTime);
+            processInput(elapsedTime);
             update(elapsedTime);
             render(elapsedTime);
 
@@ -133,6 +166,22 @@ MazeGame.main = (function (graphics, objects) {
         }
     }
 
+    //register handlers and input
     document.getElementById('newgame').addEventListener('click', init);
 
-}(MazeGame.graphics, MazeGame.objects));
+    myKeyboard.register('w', PLAYER.moveUp);
+    myKeyboard.register('d', PLAYER.moveRight);
+    myKeyboard.register('s', PLAYER.moveDown);
+    myKeyboard.register('a', PLAYER.moveLeft);
+
+    myKeyboard.register('ArrowUp', PLAYER.moveUp);
+    myKeyboard.register('ArrowRight', PLAYER.moveRight);
+    myKeyboard.register('ArrowDown', PLAYER.moveDown);
+    myKeyboard.register('ArrowLeft', PLAYER.moveLeft);
+
+    myKeyboard.register('i', PLAYER.moveUp);
+    myKeyboard.register('l', PLAYER.moveRight);
+    myKeyboard.register('k', PLAYER.moveDown);
+    myKeyboard.register('j', PLAYER.moveLeft);
+
+}(MazeGame.graphics, MazeGame.objects, MazeGame.input));

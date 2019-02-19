@@ -3,18 +3,17 @@
 // Creates a Player object, with functions for managing state.
 //
 // spec = {
-//     imageSrc: ,   //[(relative) file path] Web server location of the image or sprite
-//     location: { x: , y: }, //[integer] location on gameboard (not in canvas pixels)
-//     gameSize: { width: , height: }, //[integer] size relative to gameboard (typically the same size as cell_size)
-//     renderSize: { width: , height: }, //[percent (0-1)] size to render relative to gameSize (eg take full or half cell)
-//     direction: ,//direction player is facing
-//     canMove: { //object full of booleans denoting available movement directions
-//         up: ,
-//         right: ,
-//         down: ,
-//         left: 
-//     }
-// 
+//      imageSrc: ,   //[(relative) file path] Web server location of the image or sprite
+//      location: { x: , y: }, //[integer] location on gameboard (not in canvas pixels)
+//      gameSize: { width: , height: }, //[integer] size relative to gameboard (typically the same size as cell_size)
+//      renderSize: { width: , height: }, //[percent (0-1)] size to render relative to gameSize (eg take full or half cell)
+//      direction: ,//direction player is facing
+//      canMove: { //object full of booleans denoting available movement directions
+//          up: ,
+//          right: ,
+//          down: ,
+//          left: 
+//      },
 // }
 //
 // ------------------------------------------------------------------------
@@ -34,51 +33,94 @@ MazeGame.objects.Player = function (spec) {
         throw "invalid player spec";
     }
 
-    Directions = {//syntactic sugar
+    // spec = {
+        //      imageSrc: ,   //[(relative) file path] Web server location of the image or sprite
+        //      location: { x: , y: }, //[integer] location on gameboard (not in canvas pixels)
+        //      gameSize: { width: , height: }, //[integer] size relative to gameboard (typically the same size as cell_size)
+        //      renderSize: { width: , height: }, //[percent (0-1)] size to render relative to gameSize (eg take full or half cell)
+        //      direction: ,//direction player is facing
+        //      canMove: { //object full of booleans denoting available movement directions
+        //          up: ,
+        //          right: ,
+        //          down: ,
+        //          left: 
+        //      },
+        // }
+
+    let initial_location_x = spec.location.x;
+    let initial_location_y = spec.location.y;
+    let initial_direction = spec.direction;
+
+    let Directions = {//syntactic sugar
         up: 'up',
         right: 'right',
         down: 'down',
         left: 'left',
     };
 
+    let score = 0;
+
     function moveForward() {
-        if (player.direction === Directions.up && canMove.up) {
+        if (spec.direction === Directions.up && spec.canMove.up) {
             //move up
             moveUp();
-        } else if (player.direction === Directions.right && canMove.right) {
+        } else if (spec.direction === Directions.right && spec.canMove.right) {
             //move right
             moveRight();
-        } else if (player.direction === Directions.down && canMove.down) {
+        } else if (spec.direction === Directions.down && spec.canMove.down) {
             //move down
             moveDown();
-        } else if (player.direction === Directions.left && canMove.left) {
+        } else if (spec.direction === Directions.left && spec.canMove.left) {
             //move left
             moveLeft();
         }
     }
 
+    function calculateScore(elapsedTime) {
+        //do stuff
+    }
+
     function moveUp() {
-        if (canMove.up) {
-            location.y -= 1;
+        if (spec.canMove.up) {
+            spec.location.y -= 1;
         }
     }
 
     function moveRight() {
-        if (canMove.right) {
-            location.x += 1;
+        if (spec.canMove.right) {
+            spec.location.x += 1;
         }
     }
 
     function moveDown() {
-        if (canMove.down) {
-            location.y += 1;
+        if (spec.canMove.down) {
+            spec.location.y += 1;
         }
     }
 
     function moveLeft() {
-        if (canMove.left) {
-            location.x -= 1;
+        if (spec.canMove.left) {
+            spec.location.x -= 1;
         }
+    }
+
+    function updateCanMove(cm) {
+        spec.canMove = {
+            up: cm.up,
+            right: cm.right,
+            down: cm.down,
+            left: cm.left,
+        }
+    }
+
+    function reset() {
+        console.log('----------------------')
+        console.log('RESET')
+        console.log('----------------------')
+        console.log('l',initial_location_x,initial_location_y);
+        spec.location.x = initial_location_x;
+        spec.location.y = initial_location_y;
+        spec.direction = initial_direction;
     }
 
     let api = {
@@ -86,10 +128,14 @@ MazeGame.objects.Player = function (spec) {
         moveRight: moveRight,
         moveDown: moveDown,
         moveLeft: moveLeft,
-        get location() { return location; },
-        get direction() { return direction; },
-        get gameSize() { return gameSize; },
-        get renderSize() { return renderSize; },
+        calculateScore: calculateScore,
+        updateCanMove: updateCanMove,
+        reset: reset,
+        get location() { return spec.location; },
+        get direction() { return spec.direction; },
+        get gameSize() { return spec.gameSize; },
+        get renderSize() { return spec.renderSize; },
+        get score() { return spec.score; },
     }
 
     return api;

@@ -8,9 +8,18 @@ MazeGame.graphics = (function () {
         context.clearRect(0, 0, canvas.width, canvas.height);
     }
 
-    function drawPlayer(player, cell_size){
+    function drawPlayer(player) {
         //TODO:draw player on board/canvas
         //player should know own direction and coordinates
+        drawRectangle({
+            x: (player.location.x * player.gameSize.width) + player.gameSize.width / 4,
+            y: (player.location.y * player.gameSize.height) + player.gameSize.height / 4,
+            w: player.gameSize.width / 2,
+            h: player.gameSize.height / 2,
+            fillStyle: 'rgba(0,0,200,1)',
+            strokeStyle: 'rgba(0,0,200,1)',
+            lineWidth: 0
+        });
     }
 
     function drawBoard(board, dims, cell_size) {
@@ -28,9 +37,9 @@ MazeGame.graphics = (function () {
 
         context.beginPath();
         context.moveTo(0, 0);
-        context.lineTo(dims.w*cell_size, 0);
-        context.lineTo(dims.w*cell_size, dims.h*cell_size);
-        context.lineTo(0, dims.h*cell_size);
+        context.lineTo(dims.w * cell_size, 0);
+        context.lineTo(dims.w * cell_size, dims.h * cell_size);
+        context.lineTo(0, dims.h * cell_size);
         context.closePath();
         context.lineWidth = 5;
 
@@ -39,7 +48,7 @@ MazeGame.graphics = (function () {
     }
 
     function drawCell(cell, cell_size) {
-        if(cell.isStart){
+        if (cell.isStart) {
             drawRectangle({
                 x: cell.x * cell_size,
                 y: cell.y * cell_size,
@@ -50,7 +59,7 @@ MazeGame.graphics = (function () {
                 lineWidth: 0
             });
         }
-        if(cell.isFinish){
+        if (cell.isFinish) {
             drawRectangle({
                 x: cell.x * cell_size,
                 y: cell.y * cell_size,
@@ -85,18 +94,18 @@ MazeGame.graphics = (function () {
             }
         }
 
-        if(cell.isOccupied){//TODO: move to something like drawPlayer() which will handle direction and such. Player should know own location.
-            drawRectangle({
-                x: cell.x * cell_size/2 + cell_size/4,
-                y: cell.y * cell_size/2 + cell_size/4,
-                w: cell_size/2,
-                h: cell_size/2,
-                fillStyle: 'rgba(0,0,200,1)',
-                strokeStyle: 'rgba(0,0,200,1)',
-                lineWidth: 0
-            });
-        }
-        
+        // if (cell.isOccupied) {//TODO: move to something like drawPlayer() which will handle direction and such. Player should know own location.
+        //     drawRectangle({
+        //         x: cell.x * cell_size / 2 + cell_size / 4,
+        //         y: cell.y * cell_size / 2 + cell_size / 4,
+        //         w: cell_size / 2,
+        //         h: cell_size / 2,
+        //         fillStyle: 'rgba(0,0,200,1)',
+        //         strokeStyle: 'rgba(0,0,200,1)',
+        //         lineWidth: 0
+        //     });
+        // }
+
     }
 
     function drawRectangle(spec) {
