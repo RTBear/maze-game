@@ -23,6 +23,7 @@ MazeGame.main = (function (graphics, objects, input) {
     var g_showShortestPath = false;//show shortest path to finish
     var g_showBreadcrumbs = false;//show all visited squares
     var g_showHint = false;//show next best square
+    let g_shortestPath = null; 
 
     var GAME_GRID = null;//data structure for game board
     var PLAYER = objects.Player({
@@ -93,10 +94,9 @@ MazeGame.main = (function (graphics, objects, input) {
 
     function toggleHint() { g_showHint = !g_showHint; }
 
-    let shortestPathDP = Array(GAME_HEIGHT).fill(0).map(() => Array(GAME_HEIGHT).fill(0));//dynamic programming 2d array
     function findShortestPath(x = GAME_WIDTH - 1, y = GAME_HEIGHT - 1) {
         // console.log(GAME_GRID[y][x]);
-        // console.log(shortestPathDP);
+        // console.log(g_shortestPath);
 
         if (y == 0 && x == 0) {
             return;
@@ -109,52 +109,39 @@ MazeGame.main = (function (graphics, objects, input) {
             left: !GAME_GRID[y][x].edge.left
         }
 
-        // for(let row = y; row >= 0; row--){
-        //     for(let col = x; col >= 0; col--){
-        //         //try to go left
-        //         if(!GAME_GRID[y][x].edge.left){
-
-        //         }else
-        //     }
-        // }
-
         for (dir in canMove) {
             if (canMove[dir]) {//if you can move a direction... move there
                 if (dir == UP) {
-                    console.log(x, y, UP);
                     let y2 = y - 1;
-                    if (shortestPathDP[y2][x] == 0) {
-                        shortestPathDP[y2][x] = shortestPathDP[y][x] + 1;
+                    if (g_shortestPath[y2][x] == 0 && !(y2 == GAME_HEIGHT - 1 && x == GAME_WIDTH - 1)) {
+                        g_shortestPath[y2][x] = g_shortestPath[y][x] + 1;
                         if (y2 == 0 && x == 0) {
                             return;
                         }
                         findShortestPath(x, y2);
                     }
                 } else if (dir == RIGHT) {
-                    console.log(x, y, RIGHT);
                     let x2 = x + 1;
-                    if (shortestPathDP[y][x2] == 0) {
-                        shortestPathDP[y][x2] = shortestPathDP[y][x] + 1;
+                    if (g_shortestPath[y][x2] == 0 && !(y == GAME_HEIGHT - 1 && x2 == GAME_WIDTH - 1)) {
+                        g_shortestPath[y][x2] = g_shortestPath[y][x] + 1;
                         if (y == 0 && x2 == 0) {
                             return;
                         }
                         findShortestPath(x2, y);
                     }
                 } else if (dir == DOWN) {
-                    console.log(x, y, DOWN);
                     let y2 = y + 1;
-                    if (shortestPathDP[y2][x] == 0) {
-                        shortestPathDP[y2][x] = shortestPathDP[y][x] + 1;
+                    if (g_shortestPath[y2][x] == 0 && !(y2 == GAME_HEIGHT - 1 && x == GAME_WIDTH - 1)) {
+                        g_shortestPath[y2][x] = g_shortestPath[y][x] + 1;
                         if (y2 == 0 && x == 0) {
                             return;
                         }
                         findShortestPath(x, y2);
                     }
                 } else if (dir == LEFT) {
-                    console.log(x, y, LEFT);
                     let x2 = x - 1;
-                    if (shortestPathDP[y][x2] == 0) {
-                        shortestPathDP[y][x2] = shortestPathDP[y][x] + 1;
+                    if (g_shortestPath[y][x2] == 0 && !(y == GAME_HEIGHT - 1 && x2 == GAME_WIDTH - 1)) {
+                        g_shortestPath[y][x2] = g_shortestPath[y][x] + 1;
                         if (y == 0 && x2 == 0) {
                             return;
                         }
@@ -201,9 +188,18 @@ MazeGame.main = (function (graphics, objects, input) {
 
         GAME_GRID[GAME_HEIGHT - 1][GAME_WIDTH - 1].isFinish = true;
 
-        console.log(GAME_GRID);
+
+        g_shortestPath = [];
+        for(let i=0;i<GAME_HEIGHT;i++){
+            let row = [];
+            for(let j=0;j<GAME_WIDTH;j++){
+                row.push(0);
+            }
+            g_shortestPath.push(row);
+        }
+
         findShortestPath();
-        console.log(shortestPathDP);
+        console.log(g_shortestPath);
 
 
         requestAnimationFrame(gameLoop);
@@ -230,7 +226,7 @@ MazeGame.main = (function (graphics, objects, input) {
             graphics.drawBreadcrumbs(PLAYER);
         }
         if (g_showShortestPath) {
-            // graphics.drawShortestPath(SHORTEST_PATH);
+            // graphics.drawShortestPath(g_shortestPath);
         }
         if (g_showHint) {
             // graphics.drawHint(HINT);
