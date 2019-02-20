@@ -2,6 +2,12 @@ body {
     padding: 15px;
 }
 
+#page-title{
+    position:fixed;
+    left:10px;
+    top:10px;
+}
+
 #high-scores {
     height: 100px;
     overflow-y: scroll;
