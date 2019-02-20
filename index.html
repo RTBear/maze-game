@@ -14,15 +14,16 @@
 </head>
 
 <body>
-    <h1 id="page-title">Maze</h1>
-    <div id="solve-time" class="text-center"><span>&nbsp;</span></div>
-    <hr>
     <div class="row">
-        <div id="side-content" class="col-xs-2">
-            <p class="text-center">Created for CS 5410</p>
-            <p class="text-center">Ryan Mecham | A01839282</p>
+        <div class="col-xs-3">
+            <div id="side-content">
+                <div id="solve-time" class="text-center"><span>&nbsp;</span></div>
+
+                <p class="text-center">Created for CS 5410</p>
+                <p class="text-center">Ryan Mecham | A01839282</p>
+            </div>
         </div>
-        <div id="main-content" class="col-xs-7">
+        <div id="main-content" class="col-xs-6">
             <div id="gameover" class="hidden">
                 <div class="text-center">
                     MAZE<br>SOLVED
@@ -32,36 +33,38 @@
             <canvas id="game-canvas" width="500" height="500"></canvas>
 
         </div>
-        <div id="side-content" class="col-xs-3">
-            <div id="scores">
-                <p>&nbsp;</p>
+        <div class="col-xs-3">
+            <div id="side-content">
+                <div id="scores">
+                    <p>&nbsp;</p>
+                </div>
+                <h2>High Scores</h2>
+                <div class="well">
+                    <ol id="high-scores">
+                    </ol>
+                </div>
+                <div id="maze-size">
+                    <h3>Maze Size</h3>
+                    <input type="radio" id="5x5" name="mazeSize" value="5x5" checked>
+                    <label for="5x5">5x5</label>
+                    <br>
+                    <input type="radio" id="10x10" name="mazeSize" value="10x10">
+                    <label for="10x10">10x10</label>
+                    <br>
+                    <input type="radio" id="15x15" name="mazeSize" value="15x15">
+                    <label for="15x15">15x15</label>
+                    <br>
+                    <input type="radio" id="20x20" name="mazeSize" value="20x20">
+                    <label for="20x20">20x20</label>
+                    <br>
+                    <input type="radio" id="50x50" name="mazeSize" value="50x50">
+                    <label for="50x50">50x50</label>
+                    <br>
+                    <input type="radio" id="100x100" name="mazeSize" value="100x100">
+                    <label for="100x100">100x100</label>
+                </div>
+                <button id="newgame" class="btn button-primary btn-block btn-success">New Game</button>
             </div>
-            <h2>High Scores</h2>
-            <div class="well">
-                <ol id="high-scores">
-                </ol>
-            </div>
-            <div id="maze-size">
-                <h3>Maze Size</h3>
-                <input type="radio" id="5x5" name="mazeSize" value="5x5" checked>
-                <label for="5x5">5x5</label>
-                <br>
-                <input type="radio" id="10x10" name="mazeSize" value="10x10">
-                <label for="10x10">10x10</label>
-                <br>
-                <input type="radio" id="15x15" name="mazeSize" value="15x15">
-                <label for="15x15">15x15</label>
-                <br>
-                <input type="radio" id="20x20" name="mazeSize" value="20x20">
-                <label for="20x20">20x20</label>
-                <br>
-                <input type="radio" id="50x50" name="mazeSize" value="50x50">
-                <label for="50x50">50x50</label>
-                <br>
-                <input type="radio" id="100x100" name="mazeSize" value="100x100">
-                <label for="100x100">100x100</label>
-            </div>
-            <button id="newgame" class="btn button-primary btn-block btn-success">New Game</button>
         </div>
     </div>
 

@@ -155,27 +155,28 @@ MazeGame.graphics = (function () {
 
     function drawBoard(board, dims, cell_size) {
         // context.strokeStyle = 'rgb(255, 255, 255)';//white
-        context.strokeStyle = 'rgb(0, 0, 0)';//black
-        context.lineWidth = 2;
+        // context.strokeStyle = 'rgb(0, 0, 0)';//black
+        context.strokeStyle = 'rgb(90, 72, 39)';//brown
+        context.lineWidth = 3;
 
+        context.beginPath();
         for (let i = 0; i < dims.h; i++) {
             for (let j = 0; j < dims.w; j++) {
                 drawCell(board[i][j], cell_size);
             }
         }
+        // context.closePath(); //TODO: do i need this
 
         context.stroke();//draw maze lines
 
-        context.beginPath();
-        context.moveTo(0, 0);
-        context.lineTo(dims.w * cell_size, 0);
-        context.lineTo(dims.w * cell_size, dims.h * cell_size);
-        context.lineTo(0, dims.h * cell_size);
-        context.closePath();
-        context.lineWidth = 5;
+        // context.moveTo(0, 0);
+        // context.lineTo(dims.w * cell_size, 0);
+        // context.lineTo(dims.w * cell_size, dims.h * cell_size);
+        // context.lineTo(0, dims.h * cell_size);
+        // context.lineWidth = 10;
 
-        // context.strokeStyle = 'rgb(0, 0, 0)';
-        context.stroke();
+        // // context.strokeStyle = 'rgb(0, 0, 0)';
+        // context.stroke();
     }
 
     function drawCell(cell, cell_size) {
