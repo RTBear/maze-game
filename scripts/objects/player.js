@@ -62,6 +62,16 @@ MazeGame.objects.Player = function (spec) {
     let scoreModifier = 0;
     let breadcrumbs = [];
 
+    //setup image
+    let imageReady = false;
+    let image = new Image();
+
+    image.onload = function() {
+        imageReady = true;
+    };
+
+    image.src = spec.imageSrc;
+
     function calculateScore(){
         let amount = -1 + scoreModifier;
         console.log('s',amount)
@@ -207,6 +217,10 @@ MazeGame.objects.Player = function (spec) {
         get scoreModifier() { return scoreModifier; },
         get breadcrumbs() { return breadcrumbs; },
         get canMove() { return spec.canMove; },
+        get image() { return image; },
+        get imageReady() { return imageReady; },
+        get renderSizeModifier() { return spec.renderSizeModifier; },
+        
     }
     
     return api;

@@ -30,10 +30,12 @@ MazeGame.main = (function (graphics, objects, input) {
 
     var GAME_GRID = null;//data structure for game board
     var PLAYER = objects.Player({
-        imageSrc: '/assets/images/pushpin-red.png',
+        // imageSrc: './assets/images/pushpin-red.png',
+        imageSrc: './assets/images/pushpin-blue.png',
         location: { x: 0, y: 0 },
         gameSize: { width: CELL_WIDTH, height: CELL_WIDTH },
-        renderSize: { width: CELL_WIDTH, height: CELL_WIDTH },
+        renderSizeModifier: .75,
+        renderSize: { width: CELL_WIDTH*this.renderSizeModifier, height: CELL_WIDTH*this.renderSizeModifier },
         direction: RIGHT,
         canMove: {
             up: false,
@@ -226,7 +228,7 @@ MazeGame.main = (function (graphics, objects, input) {
 
         PLAYER.updateSize({
             gameSize: { width: CELL_WIDTH, height: CELL_WIDTH },
-            renderSize: { width: CELL_WIDTH, height: CELL_WIDTH },
+            renderSize: { width: CELL_WIDTH * PLAYER.renderSizeModifier, height: CELL_WIDTH * PLAYER.renderSizeModifier },
         });
 
         GAME_GRID[GAME_HEIGHT - 1][GAME_WIDTH - 1].isFinish = true;
@@ -272,7 +274,7 @@ MazeGame.main = (function (graphics, objects, input) {
         updateScores();
         updateSolveTime();
         SOLVE_TIME += elapsedTime;
-        console.log(SOLVE_TIME, parseTime(SOLVE_TIME));
+        // console.log(SOLVE_TIME, parseTime(SOLVE_TIME));
     }
 
     function render(elapsedTime) {

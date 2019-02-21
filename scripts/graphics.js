@@ -102,7 +102,7 @@ MazeGame.graphics = (function () {
         }
     }
 
-    function drawShortPathSection(x, y, size, isHint=false) {
+    function drawShortPathSection(x, y, size, isHint = false) {
         let w = size / 3;
         let h = size / 3;
         let spec = {
@@ -112,10 +112,10 @@ MazeGame.graphics = (function () {
             y: (y * size) + (size - h) / 2,
             lineWidth: 0
         };
-        if(isHint){
+        if (isHint) {
             spec.fillStyle = 'rgba(200, 200, 15, 1)';
             spec.strokeStyle = 'rgba(160, 160, 15, 1)';
-        }else{
+        } else {
             spec.fillStyle = 'rgba(226, 226, 15, 1)';
             spec.strokeStyle = 'rgba(226, 226, 15, 1)';
         }
@@ -140,17 +140,24 @@ MazeGame.graphics = (function () {
     }
 
     function drawPlayer(player) {
-        //TODO:draw player on board/canvas
-        //player should know own direction and coordinates
-        drawRectangle({
-            x: (player.location.x * player.gameSize.width) + player.gameSize.width / 4,
-            y: (player.location.y * player.gameSize.height) + player.gameSize.height / 4,
-            w: player.gameSize.width / 2,
-            h: player.gameSize.height / 2,
-            fillStyle: 'rgba(0,0,200,1)',
-            strokeStyle: 'rgba(0,0,200,1)',
-            lineWidth: 0
-        });
+        console.log(player);
+        if (!player.imageReady) {
+            drawRectangle({
+                x: (player.location.x * player.gameSize.width) + player.gameSize.width / 4,
+                y: (player.location.y * player.gameSize.height) + player.gameSize.height / 4,
+                w: player.gameSize.width / 2,
+                h: player.gameSize.height / 2,
+                fillStyle: 'rgba(0,0,200,1)',
+                strokeStyle: 'rgba(0,0,200,1)',
+                lineWidth: 0
+            });
+        } else {
+            let center = {
+                x: (player.location.x * player.gameSize.width) + (player.gameSize.width / 2),
+                y: (player.location.y * player.gameSize.height) + (player.gameSize.height / 2),
+            };
+            drawTexture(player.image, center, 0, player.renderSize);
+        }
     }
 
     function drawBoard(board, dims, cell_size) {
@@ -260,46 +267,25 @@ MazeGame.graphics = (function () {
         context.restore();
     }
 
-    function Texture(spec) {
-        let ready = false;
-        let image = new Image();
+    function drawTexture(image, center, rotation, size) {
+        context.save();
 
-        image.onload = function () {
-            ready = true;
-        };
-        image.src = spec.imageSrc;
+        context.translate(center.x, center.y);
+        context.rotate(rotation);
+        context.translate(-center.x, -center.y);
 
-        function draw() {
-            if (ready) {
-                context.save();
+        context.drawImage(
+            image,
+            center.x - size.width / 2,
+            center.y - size.height / 2,
+            size.width, size.height);
 
-                context.translate(spec.center.x, spec.center.y);
-                context.rotate(spec.rotation);
-                context.translate(-spec.center.x, -spec.center.y);
-
-                context.drawImage(
-                    image,
-                    spec.center.x - spec.width / 2,
-                    spec.center.y - spec.height / 2,
-                    spec.width, spec.height);
-
-                context.restore();
-            }
-        }
-
-        function updateRotation(howMuch) {
-            spec.rotation += howMuch;
-        }
-
-        return {
-            draw: draw,
-            updateRotation: updateRotation
-        };
+        context.restore();
     }
 
     let api = {
         clear: clear,
-        Texture: Texture,
+        drawTexture: drawTexture,
         drawRectangle: drawRectangle,
         drawBoard: drawBoard,
         drawPlayer: drawPlayer,
