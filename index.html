@@ -7,8 +7,8 @@
     <meta name="description" content="This is a simple maze solving game.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="./styles.css">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 </head>
@@ -17,7 +17,18 @@
     <div class="row">
         <div class="col-xs-3">
             <div id="side-content">
-                <div id="solve-time" class="text-center"><span>&nbsp;</span></div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <p>Current Time</p>
+                        <div id="solve-time" class=""><span>&nbsp;</span></div>
+                    </div>
+                    <div class="col-sm-6 text-right">
+                        <p>Current Score</p>
+                        <div id="scores">
+                            <span>&nbsp;</span>
+                        </div>
+                    </div>
+                </div>
 
                 <p class="text-center">Created for CS 5410</p>
                 <p class="text-center">Ryan Mecham | A01839282</p>
@@ -35,9 +46,6 @@
         </div>
         <div class="col-xs-3">
             <div id="side-content">
-                <div id="scores">
-                    <p>&nbsp;</p>
-                </div>
                 <h2>High Scores</h2>
                 <div class="well">
                     <ol id="high-scores">
@@ -45,23 +53,29 @@
                 </div>
                 <div id="maze-size">
                     <h3>Maze Size</h3>
-                    <input type="radio" id="5x5" name="mazeSize" value="5x5" checked>
-                    <label for="5x5">5x5</label>
-                    <br>
-                    <input type="radio" id="10x10" name="mazeSize" value="10x10">
-                    <label for="10x10">10x10</label>
-                    <br>
-                    <input type="radio" id="15x15" name="mazeSize" value="15x15">
-                    <label for="15x15">15x15</label>
-                    <br>
-                    <input type="radio" id="20x20" name="mazeSize" value="20x20">
-                    <label for="20x20">20x20</label>
-                    <br>
-                    <input type="radio" id="50x50" name="mazeSize" value="50x50">
-                    <label for="50x50">50x50</label>
-                    <br>
-                    <input type="radio" id="100x100" name="mazeSize" value="100x100">
-                    <label for="100x100">100x100</label>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <input type="radio" id="5x5" name="mazeSize" value="5x5" checked>
+                            <label for="5x5">5x5</label>
+                            <br>
+                            <input type="radio" id="10x10" name="mazeSize" value="10x10">
+                            <label for="10x10">10x10</label>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="radio" id="15x15" name="mazeSize" value="15x15">
+                            <label for="15x15">15x15</label>
+                            <br>
+                            <input type="radio" id="20x20" name="mazeSize" value="20x20">
+                            <label for="20x20">20x20</label>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="radio" id="50x50" name="mazeSize" value="50x50">
+                            <label for="50x50">50x50</label>
+                            <br>
+                            <input type="radio" id="100x100" name="mazeSize" value="100x100">
+                            <label for="100x100">100x100</label>
+                        </div>
+                        </div>
                 </div>
                 <button id="newgame" class="btn button-primary btn-block btn-success">New Game</button>
             </div>
@@ -83,8 +97,8 @@
     <script src="./scripts/driver.js"></script>
 
 
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 </body>
 
 </html>

@@ -67,7 +67,7 @@ MazeGame.main = (function (graphics, objects, input) {
 
     function updateScores() {
         let scoreDiv = document.getElementById('scores');
-        scoreDiv.innerHTML = '<p class="text-center">Current Score: <span id="score">' + PLAYER.score + '</span></p>';
+        scoreDiv.innerHTML = '<span id="score">' + PLAYER.score + '</span>';
     }
 
     function updateSolveTime() {

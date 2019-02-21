@@ -1,3 +1,8 @@
+@font-face{
+    font-family: "ArmyChalk";
+    src: url('./assets/fonts/anonymous-fonts_armychalk/ArmyChalk.ttf');
+}
+
 body {
     padding: 15px;
     background-image: url("./assets/images/oak2.jpg");
@@ -17,9 +22,16 @@ body {
 
 #side-content {
     background-color: #d6aa70;
-    border: 5px solid rgb(90, 72, 39);
+    border: 10px solid rgb(90, 72, 39);
     border-radius: 15px;
     padding: 10px;
+    background-image: url("./assets/images/blackboard.jpg");
+    color: white;
+    font-family: "ArmyChalk";
+}
+
+.well {
+    color: black;
 }
 
 #game-canvas {
@@ -39,9 +51,9 @@ body {
     margin: 49px auto -400px auto;
     font-size: 120px;
 }
-#solve-time {
-    font-family: monospace;
+#solve-time, #score {
+    /* font-family: monospace; */
     font-size: 50px;
-    color: #FF0000;
+    /* color: #FF0000; */
     padding: 5px;
 }
