@@ -140,7 +140,6 @@ MazeGame.graphics = (function () {
     }
 
     function drawPlayer(player) {
-        console.log(player);
         if (!player.imageReady) {
             drawRectangle({
                 x: (player.location.x * player.gameSize.width) + player.gameSize.width / 4,

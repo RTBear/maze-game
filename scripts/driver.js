@@ -203,7 +203,7 @@ MazeGame.main = (function (graphics, objects, input) {
         const MAZE_SIZE_TO_GAME_SIZE_MULTIPLIER = 3;//because each cell in a 5x5 maze will consist of 9 actual game cells 
         //set maze size
         let mazeSize = getMazeSize();
-        console.log(mazeSize)
+        // console.log(mazeSize)
         GAME_WIDTH = mazeSize.width;//TODO: move game board into its own class/file
         GAME_HEIGHT = mazeSize.height;
         CELL_WIDTH = CANVAS_WIDTH / GAME_WIDTH;//for use if using non-square gameboard

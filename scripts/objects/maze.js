@@ -22,8 +22,8 @@ MazeGame.objects.Maze = function(spec) {
     let shapeX = spec.width;
     let shapeY = spec.height;
 
-    console.log('w', shapeX, 'px', shapeX / 3);
-    console.log('h', shapeY, 'py', shapeY / 3);
+    // console.log('w', shapeX, 'px', shapeX / 3);
+    // console.log('h', shapeY, 'py', shapeY / 3);
 
     // build actual maze
     var maze = blankBoard(shapeX = shapeX, shapeY = shapeY);

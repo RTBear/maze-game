@@ -74,7 +74,7 @@ MazeGame.objects.Player = function (spec) {
 
     function calculateScore(){
         let amount = -1 + scoreModifier;
-        console.log('s',amount)
+        // console.log('s',amount)
         score += amount;
         if(score < 0){
             score = 0;
